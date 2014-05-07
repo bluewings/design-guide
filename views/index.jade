@@ -45,41 +45,116 @@ block content
 
 					div.layer-tree(ng-bind-html="data.box | layerTree : data.showConfiguredOnly")
 
-					div.panel(ng-show='data.selectedBox'
+					div.panel.panel-default(ng-show='data.selectedBox'
 						style='position:absolute;width:300px;top:{{data.selectedBox.y}}px;right:0'
 						)
 						div.panel-body
 							button.btn.btn-sm.btn-default(
 								ng-click="func.divide(data.selectedIndex)"
-								ng-disabled="data.selectedBox.boxes.length ? 'disabled' : false"
-							)
+								ng-disabled="data.selectedBox.boxes.length ? 'disabled' : false")
 								span.glyphicon.glyphicon-th-large
 
 							button.btn.btn-sm(
-								ng-class="data.selectedBox.guideType == 'outer' ? 'btn-primary' : ''"
-								ng-click="func.setGuideType('outer')"
-							)
+								ng-class='data.selectedBox.guideType == "outer" ? "btn-primary" : ""'
+								ng-click='func.setGuideType("outer")')
 								span.glyphicon.glyphicon-th-large
 								| 테두리표시
 							button.btn.btn-sm(
 								ng-class="data.selectedBox.guideType == 'inner' ? 'btn-primary' : ''"
-								ng-click="func.setGuideType('inner')"
-							)
+								ng-click="func.setGuideType('inner')")
 								span.glyphicon.glyphicon-th-large
 								| 내부표시
+							button.btn.btn-sm(
+								ng-class="data.selectedBox.guideType == 'gap' ? 'btn-primary' : ''"
+								ng-click="func.setGuideType('gap')")
+								span.glyphicon.glyphicon-th-large
+								| 간격표시
 
 							button.btn.btn-sm(
 								ng-click='func.unselectBox()'
 							)
 								| 닫기
 
+							br
+
+							br
+
+	
+
+							canvas(width='{{data.selectedBox._previewW}}',height='{{data.selectedBox._previewH}}',data-scaled)
+
+							div(style='width:50px;height:50px;background-color:{{data.colorPicked}}')
+
+							{{data.colorPicked}}
+
+
+
+							br
+							br
+
+
+
+
+
+
+
+							div(ng-show='data.selectedBox.guideType == "outer"')
+
+								select.form-control(ng-model='data.selectedBox.outerType')
+									option(value='width') width
+									option(value='height') height
+									option(value='width x height') width x height
+
+								div(ng-show='data.selectedBox.outerType == "width"')
+
+									button.btn.btn-sm(ng-click='func.setGuideAlign("t")',
+										class="btn-{{data.selectedBox.guideAlignV == 't' ? 'success' : 'default'}}")
+										| 상단
+									button.btn.btn-sm(ng-click='func.setGuideAlign("b")',
+										class="btn-{{data.selectedBox.guideAlignV == 'b' ? 'success' : 'default'}}")
+										| 하단
+
+								div(ng-show='data.selectedBox.outerType == "height"')
+
+									button.btn.btn-sm(ng-click='func.setGuideAlign("l")',
+										class="btn-{{data.selectedBox.guideAlignH == 'l' ? 'success' : 'default'}}")
+										| 좌
+									button.btn.btn-sm(ng-click='func.setGuideAlign("r")',
+										class="btn-{{data.selectedBox.guideAlignH == 'r' ? 'success' : 'default'}}")
+										| 우
+
+								div(ng-show='data.selectedBox.outerType == "width x height"')
+
+									button.btn.btn-sm(ng-click='func.setGuideAlign("tl")',
+										class="btn-{{data.selectedBox.guideAlignV == 't' && data.selectedBox.guideAlignH == 'l' ? 'success' : 'default'}}")
+										| 좌상단
+									button.btn.btn-sm(ng-click='func.setGuideAlign("tr")',
+										class="btn-{{data.selectedBox.guideAlignV == 't' && data.selectedBox.guideAlignH == 'r' ? 'success' : 'default'}}")
+										| 우상단
+									button.btn.btn-sm(ng-click='func.setGuideAlign("br")',
+										class="btn-{{data.selectedBox.guideAlignV == 'b' && data.selectedBox.guideAlignH == 'r' ? 'success' : 'default'}}")
+										| 우하단
+									button.btn.btn-sm(ng-click='func.setGuideAlign("bl")',
+										class="btn-{{data.selectedBox.guideAlignV == 'b' && data.selectedBox.guideAlignH == 'l' ? 'success' : 'default'}}")
+										| 좌하단
+
+							div(ng-show='data.selectedBox.guideType == "gap"')
+
+								select.form-control(ng-model='data.selectedBox.gapType')
+									option(value='width') width
+									option(value='height') height
+
+
 							input.form-control.input-sm(type='text',
 								ng-model='data.selectedBox.name')
 
+							textarea.form-control.input-sm(rows='5', ng-model='data.selectedBox.desc')
+
 							div
 
-							pre
-								| {{data.selectedBox | json}}
+							//
+								pre
+									| {{data.selectedBox | json}}
 
 				div.col.col-md-8
 

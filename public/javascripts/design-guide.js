@@ -9,7 +9,7 @@
     CONFIG = {
         CLASSNAME_HOVER: 'hove2',
         CLASSNAME_BOX: 'area',
-        SELECTOR_BOX: '.area',
+        SELECTOR_BOX: '.area[data-box-index]',
         ARCHIVE_KEY: 'ls-design-guide-data'
     };
 
@@ -45,17 +45,32 @@
                         ' class="' + CONFIG.CLASSNAME_BOX + (each.selected ? ' selected' : '') + '"' +
                         ' style="top:' + each.y + 'px;left:' + each.x + 'px;width:' + each.w + 'px;height:' + each.h + 'px"> ');
 
+                    if (each.desc) {
+                        html.push('<span class="has-info glyphicon glyphicon-comment"></span> ');
+                    }
+
                     switch (each.guideType) {
                         case 'outer':
                             html.push('<div class="guide-outer"> ');
-                            //html.push('<div class="guide-w"><em>' + each.w + '</em></div>');
-                            html.push('<div class="guide-w"><em style="width:' + each.w + 'px"><div class="line-l" style="width:' + (each.w  / 2 - 20) + 'px"></div><span>' + each.w + '</span><div class="line-r" style="width:' + (each.w / 2 - 20) + 'px"></div></em></div>');
-                            html.push('<div class="guide-h"><em style="height:' + each.h + 'px"><div class="line-t" style="height:' + (each.h  / 2 - 13) + 'px"></div><span>' + each.h + '</span><div class="line-b" style="height:' + (each.h / 2 - 13) + 'px"></div></em></div>');
+                            if (each.outerType == 'width' || each.outerType == 'width x height') {
+                                html.push('<div class="guide-w guide-dir-' + each.guideAlignV + '"><em style="width:' + each.w + 'px"><div class="line-l" style="width:' + (each.w  / 2 - 20) + 'px"></div><span>' + each.w + '</span><div class="line-r" style="width:' + (each.w / 2 - 20) + 'px"></div></em></div>');    
+                            }
+                            if (each.outerType == 'height' || each.outerType == 'width x height') {
+                                html.push('<div class="guide-h guide-dir-' + each.guideAlignH + '"><em style="height:' + each.h + 'px"><div class="line-t" style="height:' + (each.h  / 2 - 13) + 'px"></div><span>' + each.h + '</span><div class="line-b" style="height:' + (each.h / 2 - 13) + 'px"></div></em></div>');
+                            }
                             html.push('</div> ');
                             break;
                         case 'inner':
                             html.push('<div class="guide-inner"><span>' + each.w + ' x ' + each.h + '</span></div>');
                             break;
+                        case 'gap':
+                            html.push('<div class="guide-gap"> ');
+                            if (each.gapType == 'height') {
+                                html.push('<div class="guide-h"><em style="height:' + each.h + 'px"><div class="line-t" style="height:' + (each.h  / 2 - 13) + 'px"></div><span>' + each.h + '</span><div class="line-b" style="height:' + (each.h / 2 - 13) + 'px"></div></em></div>');
+                            } else {
+                                html.push('<div class="guide-w"><em style="width:' + each.w + 'px"><div class="line-l" style="width:' + (each.w  / 2 - 20) + 'px"></div><span>' + each.w + '</span><div class="line-r" style="width:' + (each.w / 2 - 20) + 'px"></div></em></div>');
+                            }
+                            html.push('</div> ');
                         default:
                             break;
 
@@ -125,7 +140,7 @@
 
         var SUCCESS = 0;
 
-        var view, imgEl, _tmp;
+        var view, imgEl, orgImgEl, _tmp;
 
         view = {
             uploadForm: $element.find('form'),
@@ -160,7 +175,8 @@
             box: {},
             jobType: 'divide',
             history: [],
-            historyIndex: 0
+            historyIndex: 0,
+            panelWidth: 260
         };
 
         // select box
@@ -177,9 +193,11 @@
         // merge boxes
         $element.delegate(CONFIG.SELECTOR_BOX, 'mousedown', function (event) {
 
+
+
             if (_drag.ondrag === false) {
                 _drag.ondrag = true;
-                _drag.frIndex = $(event.target).attr('data-box-index');
+                _drag.frIndex = $(event.currentTarget).attr('data-box-index');
                 _drag.frIndex_ = _drag.frIndex.split(',');
             }
 
@@ -188,7 +206,7 @@
             var range;
 
             if (_drag.ondrag) {
-                range = getIndexRange(_drag.frIndex_, $(event.target).attr('data-box-index'));
+                range = getIndexRange(_drag.frIndex_, $(event.currentTarget).attr('data-box-index'));
                 if (range) {
                     highlight(range);
                 }
@@ -199,7 +217,7 @@
             var range, mergedIndex;
 
             if (_drag.ondrag) {
-                range = getIndexRange(_drag.frIndex_, $(event.target).attr('data-box-index'));
+                range = getIndexRange(_drag.frIndex_, $(event.currentTarget).attr('data-box-index'));
                 if (range) {
                     mergedIndex = merge(range);
                     $scope.$apply(function () {
@@ -212,6 +230,34 @@
         $(document.body).on('mouseup', function (event) {
 
             _drag.ondrag = false;
+        });
+
+        // canvas color picker
+        $element.delegate('canvas[data-scaled]', 'mousemove', function(event) {
+
+            var imgData = event.target.getContext('2d').getImageData(event.offsetX, event.offsetY, 1, 1).data,
+                rgb = '#' + (imgData[0]).toString(16) + (imgData[1]).toString(16) + (imgData[2]).toString(16);
+
+            $scope.$apply(function() {
+                $scope.data.colorPicked = rgb;
+            });
+
+        }).delegate('canvas[data-scaled]', 'mouseout', function(event) {
+
+            $scope.$apply(function() {
+                delete $scope.data.colorPicked ;
+            });
+
+        }).delegate('canvas[data-scaled]', 'click', function(event) {
+
+            var imgData = event.target.getContext('2d').getImageData(event.offsetX, event.offsetY, 1, 1).data,
+                rgb = '#' + (imgData[0]).toString(16) + (imgData[1]).toString(16) + (imgData[2]).toString(16);
+
+            if ($scope.data.selectedBox) {
+                $scope.$apply(function() {
+                    $scope.data.selectedBox.desc = $.trim($scope.data.selectedBox.desc) + ' ' + rgb;
+                });    
+            }
         });
 
         $scope.func = {
@@ -268,6 +314,24 @@
                     $scope.data.selectedBox = target;
                     $scope.data.selectedBox.selected = true;
                     $scope.data.selectedIndex = index;
+
+                    if (target.w < $scope.data.panelWidth) {
+                        $scope.data.selectedBox._previewW = target.w;
+                        $scope.data.selectedBox._previewH = target.h;
+                    } else {
+                        $scope.data.selectedBox._previewW = $scope.data.panelWidth;
+                        $scope.data.selectedBox._previewH = parseInt(target.h * $scope.data.panelWidth / target.w, 10);
+                    }
+
+                    $timeout(function() {
+
+                        var canvas = $('canvas[data-scaled]').get(0),
+                            ctx = canvas.getContext('2d');
+
+                        //ctx.fillStyle = 'blue';
+                        ctx.drawImage(orgImgEl, target.x, target.y, target.w, target.h, 0,0,$scope.data.selectedBox._previewW, $scope.data.selectedBox._previewH);
+
+                    });
                 }
             },
 
@@ -319,6 +383,42 @@
                         delete $scope.data.selectedBox.guideType;
                     } else {
                         $scope.data.selectedBox.guideType = guideType;
+                        if (guideType == 'outer' && !$scope.data.selectedBox.outerType) {
+                            $scope.data.selectedBox.outerType = 'width x height';
+                        }
+                        if (guideType == 'gap' && !$scope.data.selectedBox.gapType) {
+                            $scope.data.selectedBox.gapType = 'height';
+                        }
+                        if (!$scope.data.selectedBox.guideAlignV) {
+                            $scope.data.selectedBox.guideAlignV = 't';
+                        }
+                        if (!$scope.data.selectedBox.guideAlignH) {
+                            $scope.data.selectedBox.guideAlignH = 'r';
+                        }
+                    }
+                }
+            },
+
+            // 가이드 정렬
+            setGuideAlign: function(direction) {
+
+                var inx, dir;
+                
+                if ($scope.data.selectedBox) {
+                    for (inx = 0; inx < direction.length; inx++) {
+                        dir = direction.charAt(inx).toLowerCase();
+                        switch (dir) {
+                            case 't':
+                            case 'b':
+                                $scope.data.selectedBox.guideAlignV = dir;
+                                break;
+                            case 'l':
+                            case 'r':
+                                $scope.data.selectedBox.guideAlignH = dir;
+                                break;
+                            default:
+                                break;
+                        }
                     }
                 }
             }
@@ -332,7 +432,7 @@
 
                     var _tmp = {};
 
-                    _tmp.orgImgEl = img;
+                    orgImgEl = img;
 
                     _tmp.edgeImgEl = Pixastic.process(img, "brightness", {
                         brightness: -30,
