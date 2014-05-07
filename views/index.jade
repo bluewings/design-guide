@@ -1,0 +1,103 @@
+extends layout
+
+block content
+	nav.navbar.navbar-default.navbar-fixed-top(role='navigation')
+		.container
+			.navbar-header
+				strong.navbar-brand
+					| Design Guide Helper v0.1
+
+	div.admin-content(ng-app='design-guide')
+		div(ng-controller='MainCtrl')
+			//
+				div.rows.container(style='background-color:rgba(0,255,255,0.3)')
+
+			div.rows.container
+
+				div.col.col-md-4.aside
+
+					div
+						| {{data.history.length}}
+					//		
+						form(action="/upload", method="post", enctype="multipart/form-data")
+							input(type="file", name="imageFile")
+
+					button.btn.btn-sm.btn-default(ng-click='func.save()')
+						span.glyphicon.glyphicon-floppy-open
+
+					button.btn.btn-sm.btn-default(ng-click='func.clear()')
+						span.glyphicon.glyphicon-remove-circle
+
+					label
+						input(type='checkbox',
+							ng-model='data.showConfiguredOnly')
+						| 설정이 존재하는 노드만 표시합니다.
+
+					//
+						div.btn-group
+							button.btn.btn-sm.btn-default
+								span.glyphicon.glyphicon-flash
+							button.btn.btn-sm.btn-default
+								span.glyphicon.glyphicon-resize-horizontal
+							button.btn.btn-sm.btn-default
+								span.glyphicon.glyphicon-resize-vertical
+								span.glyphicon.glyphicon-trash
+
+					div.layer-tree(ng-bind-html="data.box | layerTree : data.showConfiguredOnly")
+
+					div.panel(ng-show='data.selectedBox'
+						style='position:absolute;width:300px;top:{{data.selectedBox.y}}px;right:0'
+						)
+						div.panel-body
+							button.btn.btn-sm.btn-default(
+								ng-click="func.divide(data.selectedIndex)"
+								ng-disabled="data.selectedBox.boxes.length ? 'disabled' : false"
+							)
+								span.glyphicon.glyphicon-th-large
+
+							button.btn.btn-sm(
+								ng-class="data.selectedBox.guideType == 'outer' ? 'btn-primary' : ''"
+								ng-click="func.setGuideType('outer')"
+							)
+								span.glyphicon.glyphicon-th-large
+								| 테두리표시
+							button.btn.btn-sm(
+								ng-class="data.selectedBox.guideType == 'inner' ? 'btn-primary' : ''"
+								ng-click="func.setGuideType('inner')"
+							)
+								span.glyphicon.glyphicon-th-large
+								| 내부표시
+
+							button.btn.btn-sm(
+								ng-click='func.unselectBox()'
+							)
+								| 닫기
+
+							input.form-control.input-sm(type='text',
+								ng-model='data.selectedBox.name')
+
+							div
+
+							pre
+								| {{data.selectedBox | json}}
+
+				div.col.col-md-8
+
+					label
+						input(type='checkbox', ng-model='data.hideRect')
+						| 영역표시를 숨깁니다.
+
+					div(style='position:relative',
+						class='{{data.hideRect ? "hide-rect" : ""}}')
+						img(ng-src="{{data.srcImg}}")
+						div(ng-bind-html="data.box | layerBox")
+
+
+					//
+						canvas(ng-attr-width='{{data.canvas.width}}',ng-attr-height='{{data.canvas.height}}', width='640')
+
+						pre
+							| {{data.canvas | json}}
+
+
+

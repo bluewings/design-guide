@@ -1,0 +1,29 @@
+doctype html
+html
+	head
+		meta(charset='utf-8')
+		meta(http-equiv='X-UA-Compatible', content='IE=edge')
+		meta(http-equiv='Content-Type', content='text/html;charset=utf-8')
+		meta(http-equiv='Content-Script-Type', content='text/javascript')
+		meta(http-equiv='Content-Style-Type', content='text/css')
+		meta(name='viewport', content='width=device-width,, initial-scale=1.0')  
+		title= title
+		link(rel='stylesheet', href='//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css')
+		link(rel='stylesheet', href='//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/smoothness/jquery-ui.css')
+		link(rel='stylesheet', href='//fonts.googleapis.com/css?family=Play:400,700')
+		link(rel='stylesheet', href='//fonts.googleapis.com/css?family=Oswald:300,400,700')
+		if stylesheets
+			each stylesheet, i in stylesheets
+				link(rel='stylesheet', href='#{stylesheet}')
+
+	body
+		block content
+
+		script(src='//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js')
+		script(src='//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js')
+		script(src='//ajax.googleapis.com/ajax/libs/angularjs/1.2.14/angular.js')
+		script(src='//ajax.googleapis.com/ajax/libs/angularjs/1.2.14/angular-sanitize.js')
+		script(src='//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js')
+		if javascripts
+			each javascript, i in javascripts
+				script(src='#{javascript}')
