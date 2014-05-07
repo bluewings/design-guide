@@ -4,6 +4,9 @@ html {
 .hide-rect .area {
   border: none; }
 
+.modal {
+  overflow-y: hidden !important; }
+
 .area {
   position: absolute;
   border: 1px dashed red;

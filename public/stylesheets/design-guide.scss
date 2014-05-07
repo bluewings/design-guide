@@ -19,6 +19,9 @@ html {
         border: none;
     }
 }
+.modal {
+    overflow-y:hidden !important;
+}
 
 .area {
     position: absolute;

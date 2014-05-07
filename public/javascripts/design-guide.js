@@ -13,7 +13,7 @@
         ARCHIVE_KEY: 'ls-design-guide-data'
     };
 
-    app = angular.module('design-guide', ['ngSanitize']);
+    app = angular.module('design-guide', ['ngSanitize', 'ui.bootstrap']);
 
     app.directive('loading', function () {
 
@@ -53,10 +53,10 @@
                         case 'outer':
                             html.push('<div class="guide-outer"> ');
                             if (each.outerType == 'width' || each.outerType == 'width x height') {
-                                html.push('<div class="guide-w guide-dir-' + each.guideAlignV + '"><em style="width:' + each.w + 'px"><div class="line-l" style="width:' + (each.w  / 2 - 20) + 'px"></div><span>' + each.w + '</span><div class="line-r" style="width:' + (each.w / 2 - 20) + 'px"></div></em></div>');    
+                                html.push('<div class="guide-w guide-dir-' + each.guideAlignV + '"><em style="width:' + each.w + 'px"><div class="line-l" style="width:' + (each.w / 2 - 20) + 'px"></div><span>' + each.w + '</span><div class="line-r" style="width:' + (each.w / 2 - 20) + 'px"></div></em></div>');
                             }
                             if (each.outerType == 'height' || each.outerType == 'width x height') {
-                                html.push('<div class="guide-h guide-dir-' + each.guideAlignH + '"><em style="height:' + each.h + 'px"><div class="line-t" style="height:' + (each.h  / 2 - 13) + 'px"></div><span>' + each.h + '</span><div class="line-b" style="height:' + (each.h / 2 - 13) + 'px"></div></em></div>');
+                                html.push('<div class="guide-h guide-dir-' + each.guideAlignH + '"><em style="height:' + each.h + 'px"><div class="line-t" style="height:' + (each.h / 2 - 13) + 'px"></div><span>' + each.h + '</span><div class="line-b" style="height:' + (each.h / 2 - 13) + 'px"></div></em></div>');
                             }
                             html.push('</div> ');
                             break;
@@ -66,9 +66,9 @@
                         case 'gap':
                             html.push('<div class="guide-gap"> ');
                             if (each.gapType == 'height') {
-                                html.push('<div class="guide-h"><em style="height:' + each.h + 'px"><div class="line-t" style="height:' + (each.h  / 2 - 13) + 'px"></div><span>' + each.h + '</span><div class="line-b" style="height:' + (each.h / 2 - 13) + 'px"></div></em></div>');
+                                html.push('<div class="guide-h"><em style="height:' + each.h + 'px"><div class="line-t" style="height:' + (each.h / 2 - 13) + 'px"></div><span>' + each.h + '</span><div class="line-b" style="height:' + (each.h / 2 - 13) + 'px"></div></em></div>');
                             } else {
-                                html.push('<div class="guide-w"><em style="width:' + each.w + 'px"><div class="line-l" style="width:' + (each.w  / 2 - 20) + 'px"></div><span>' + each.w + '</span><div class="line-r" style="width:' + (each.w / 2 - 20) + 'px"></div></em></div>');
+                                html.push('<div class="guide-w"><em style="width:' + each.w + 'px"><div class="line-l" style="width:' + (each.w / 2 - 20) + 'px"></div><span>' + each.w + '</span><div class="line-r" style="width:' + (each.w / 2 - 20) + 'px"></div></em></div>');
                             }
                             html.push('</div> ');
                         default:
@@ -136,7 +136,7 @@
         };
     });
 
-    app.controller('MainCtrl', function ($scope, $element, $http, $timeout) {
+    app.controller('MainCtrl', function ($scope, $element, $http, $timeout, $modal) {
 
         var SUCCESS = 0;
 
@@ -233,30 +233,30 @@
         });
 
         // canvas color picker
-        $element.delegate('canvas[data-scaled]', 'mousemove', function(event) {
+        $element.delegate('canvas[data-scaled]', 'mousemove', function (event) {
 
             var imgData = event.target.getContext('2d').getImageData(event.offsetX, event.offsetY, 1, 1).data,
                 rgb = '#' + (imgData[0]).toString(16) + (imgData[1]).toString(16) + (imgData[2]).toString(16);
 
-            $scope.$apply(function() {
+            $scope.$apply(function () {
                 $scope.data.colorPicked = rgb;
             });
 
-        }).delegate('canvas[data-scaled]', 'mouseout', function(event) {
+        }).delegate('canvas[data-scaled]', 'mouseout', function (event) {
 
-            $scope.$apply(function() {
-                delete $scope.data.colorPicked ;
+            $scope.$apply(function () {
+                delete $scope.data.colorPicked;
             });
 
-        }).delegate('canvas[data-scaled]', 'click', function(event) {
+        }).delegate('canvas[data-scaled]', 'click', function (event) {
 
             var imgData = event.target.getContext('2d').getImageData(event.offsetX, event.offsetY, 1, 1).data,
                 rgb = '#' + (imgData[0]).toString(16) + (imgData[1]).toString(16) + (imgData[2]).toString(16);
 
             if ($scope.data.selectedBox) {
-                $scope.$apply(function() {
+                $scope.$apply(function () {
                     $scope.data.selectedBox.desc = $.trim($scope.data.selectedBox.desc) + ' ' + rgb;
-                });    
+                });
             }
         });
 
@@ -264,6 +264,51 @@
 
             // 작업내용 초기화
             clear: function () {
+
+
+                var modalInstance = $modal.open({
+                    templateUrl: '/templates/design-guide.modal.test.html',
+                    controller: function ($scope, $modalInstance, items) {
+
+                        /*$scope.items = items;
+  $scope.selected = {
+    item: $scope.items[0]
+  };*/
+
+                        $scope.ok = function () {
+
+                            $http.post('/work', {
+                                aaa: 'test'
+
+                            }).success(function(data) {
+
+                                console.log(data);
+
+                            });
+                            $modalInstance.close(); //$scope.selected.item);
+                        };
+
+                        $scope.cancel = function () {
+                            $modalInstance.dismiss('cancel');
+                        };
+                    },
+                    //size: size,
+                    resolve: {
+                        items: function () {
+                            //return $scope.items;
+                        }
+                    }
+                });
+
+                //var ModalInstanceCtrl = ;    
+
+                /*modalInstance.result.then(function (selectedItem) {
+      $scope.selected = selectedItem;
+    }, function () {
+      $log.info('Modal dismissed at: ' + new Date());
+    });*/
+
+                return;
 
                 $scope.func.unselectBox();
                 $scope.data.box = {
@@ -323,13 +368,13 @@
                         $scope.data.selectedBox._previewH = parseInt(target.h * $scope.data.panelWidth / target.w, 10);
                     }
 
-                    $timeout(function() {
+                    $timeout(function () {
 
                         var canvas = $('canvas[data-scaled]').get(0),
                             ctx = canvas.getContext('2d');
 
                         //ctx.fillStyle = 'blue';
-                        ctx.drawImage(orgImgEl, target.x, target.y, target.w, target.h, 0,0,$scope.data.selectedBox._previewW, $scope.data.selectedBox._previewH);
+                        ctx.drawImage(orgImgEl, target.x, target.y, target.w, target.h, 0, 0, $scope.data.selectedBox._previewW, $scope.data.selectedBox._previewH);
 
                     });
                 }
@@ -400,10 +445,10 @@
             },
 
             // 가이드 정렬
-            setGuideAlign: function(direction) {
+            setGuideAlign: function (direction) {
 
                 var inx, dir;
-                
+
                 if ($scope.data.selectedBox) {
                     for (inx = 0; inx < direction.length; inx++) {
                         dir = direction.charAt(inx).toLowerCase();

@@ -15,9 +15,44 @@ router.get('/', function (req, res) {
         javascripts: [
             '/javascripts/jquery.form.min.js',
             '/javascripts/pixastic.custom.js',
+            '/javascripts/ui-bootstrap-tpls-0.11.0.min.js',
             '/javascripts/design-guide.util.js',
             '/javascripts/design-guide.js']
     });
+});
+
+// WORK - Create
+router.post('/work', function(req, res) {
+
+    console.log(req.body);
+
+    res.jsonp({});
+});
+
+// WORK - Update
+router.post('/work/:id', function(req, res) {
+
+    console.log(req.params.id);
+    console.log(req.body);
+
+    res.jsonp({});
+});
+
+// WORK - Read
+router.get('/work', function (req, res) {
+
+    console.log(req.body);
+
+    res.jsonp({});
+});
+
+// WORK - Delete
+router.delete('/work/:id', function (req, res) {
+
+    console.log(req.params.id);
+    console.log(req.body);
+
+    res.jsonp({});
 });
 
 router.post('/upload', function (req, res) {
