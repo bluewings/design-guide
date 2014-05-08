@@ -7,7 +7,7 @@ block content
 				strong.navbar-brand
 					| Design Guide Helper v0.1
 
-	div.admin-content(ng-app='design-guide')
+	div.main-content(ng-app='design-guide')
 		div(ng-controller='MainCtrl')
 			//
 				div.rows.container(style='background-color:rgba(0,255,255,0.3)')
@@ -27,6 +27,12 @@ block content
 
 					button.btn.btn-sm.btn-default(ng-click='func.clear()')
 						span.glyphicon.glyphicon-remove-circle
+
+					button.btn.btn-sm.btn-default(ng-click='func.browse()')
+						span.glyphicon.glyphicon-folder-open
+
+					button.btn.btn-sm.btn-default(ng-show='data._workId', ng-click='func.remove()')
+						| 지우자
 
 					label
 						input(type='checkbox',

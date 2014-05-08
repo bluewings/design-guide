@@ -1,230 +1,274 @@
+@import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css);
 html {
   overflow-y: scroll; }
 
-.hide-rect .area {
-  border: none; }
+body {
+  padding: 0 !important;
+  margin: 0;
+  background-color: #4c505c;
+  word-break: break-all;
+  font-family: Nanum Gothic,AppleGothic,sans-serif;
+  font-size: 12px; }
+
+.navbar {
+  font-family: Play;
+  min-height: 0; }
+  .navbar .navbar-brand {
+    padding-top: 7px;
+    padding-bottom: 7px;
+    height: auto; }
+  .navbar.navbar-fixed-top {
+    border-bottom: 1px solid #ccc; }
+    .navbar.navbar-fixed-top .navbar-nav.target-list > li > a {
+      padding: 6px 10px 8px;
+      font-size: 18px;
+      font-weight: bold;
+      color: #fff !important; }
+    .navbar.navbar-fixed-top .navbar-nav > li > a {
+      padding: 5px 6px; }
+    .navbar.navbar-fixed-top input {
+      font-size: 18px;
+      font-weight: bold;
+      padding: 0 5px 2px;
+      line-height: 0;
+      height: 22px;
+      text-align: center;
+      width: 170px;
+      margin-top: 6px;
+      margin-bottom: 6px;
+      color: #777; }
+
+.main-content {
+  margin-top: 45px; }
+  .main-content .hide-rect .area {
+    border: none; }
+  .main-content .area {
+    position: absolute;
+    border: 1px dashed red;
+    -webkit-user-select: none;
+    /*background-color:rgba(0,0,255,0.2);*/ }
+    .main-content .area.selected {
+      background-color: rgba(255, 0, 0, 0.2); }
+    .main-content .area .has-info {
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      color: rgba(255, 255, 255, 0.65);
+      /*background-color:rgba(255,0,0,0.65);*/
+      background-color: rgba(255, 0, 0, 0.35);
+      padding: 5px;
+      -webkit-transition: all 0.5s; }
+      .main-content .area .has-info:hover {
+        color: #fff;
+        background-color: rgba(255, 0, 0, 0.65); }
+    .main-content .area .guide-outer {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      color: red;
+      font-family: Tahoma;
+      font-size: 12px;
+      font-weight: bold;
+      box-sizing: border-box; }
+      .main-content .area .guide-outer .guide-w {
+        position: absolute;
+        border-left: 1px dotted red;
+        border-right: 1px dotted red;
+        width: 100%;
+        height: 100%;
+        text-align: center; }
+        .main-content .area .guide-outer .guide-w.guide-dir-b > em {
+          top: auto;
+          bottom: -30px; }
+        .main-content .area .guide-outer .guide-w > em {
+          position: absolute;
+          left: -1px;
+          top: -30px;
+          /*width: 100%;*/
+          height: 30px;
+          border-left: 1px dotted red;
+          border-right: 1px dotted red;
+          text-align: center; }
+          .main-content .area .guide-outer .guide-w > em > span {
+            position: absolute;
+            display: block;
+            font-style: normal;
+            top: 50%;
+            width: 100%;
+            height: 21px;
+            margin-top: -10.5px;
+            padding: 2px; }
+          .main-content .area .guide-outer .guide-w > em > div.line-l, .main-content .area .guide-outer .guide-w > em > div.line-r {
+            position: absolute;
+            border-top: 1px dotted red;
+            top: 15px;
+            height: 1px; }
+            .main-content .area .guide-outer .guide-w > em > div.line-l.line-l, .main-content .area .guide-outer .guide-w > em > div.line-r.line-l {
+              left: 0; }
+            .main-content .area .guide-outer .guide-w > em > div.line-l.line-r, .main-content .area .guide-outer .guide-w > em > div.line-r.line-r {
+              right: 0; }
+      .main-content .area .guide-outer .guide-h {
+        position: absolute;
+        border-top: 1px dotted red;
+        border-bottom: 1px dotted red;
+        width: 100%;
+        height: 100%;
+        text-align: center; }
+        .main-content .area .guide-outer .guide-h.guide-dir-l > em {
+          right: auto;
+          left: -30px; }
+        .main-content .area .guide-outer .guide-h > em {
+          position: absolute;
+          right: -30px;
+          top: -1px;
+          width: 30px;
+          /*height: 100%;*/
+          border-top: 1px dotted red;
+          border-bottom: 1px dotted red; }
+          .main-content .area .guide-outer .guide-h > em > span {
+            position: absolute;
+            display: block;
+            font-style: normal;
+            top: 50%;
+            width: 30px;
+            height: 21px;
+            margin-top: -10.5px;
+            padding: 2px; }
+          .main-content .area .guide-outer .guide-h > em > div.line-t, .main-content .area .guide-outer .guide-h > em > div.line-b {
+            position: absolute;
+            border-right: 1px dotted red;
+            left: 15px;
+            width: 1px; }
+            .main-content .area .guide-outer .guide-h > em > div.line-t.line-t, .main-content .area .guide-outer .guide-h > em > div.line-b.line-t {
+              top: 0; }
+            .main-content .area .guide-outer .guide-h > em > div.line-t.line-b, .main-content .area .guide-outer .guide-h > em > div.line-b.line-b {
+              bottom: 0; }
+    .main-content .area .guide-inner {
+      font-family: Tahoma;
+      font-size: 12px;
+      font-weight: bold;
+      position: relative;
+      pointer-events: none;
+      width: 100%;
+      height: 100%;
+      border: 1px solid red; }
+      .main-content .area .guide-inner span {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        background-color: silver;
+        width: 80px;
+        margin-left: -40px;
+        height: 21px;
+        margin-top: -10.5px;
+        text-align: center;
+        padding: 2px; }
+    .main-content .area .guide-gap {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      color: red;
+      font-family: Tahoma;
+      font-size: 12px;
+      font-weight: bold;
+      box-sizing: border-box; }
+      .main-content .area .guide-gap .guide-w {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        text-align: center; }
+        .main-content .area .guide-gap .guide-w > em {
+          position: absolute;
+          left: -1px;
+          top: 50%;
+          height: 30px;
+          margin-top: -15px;
+          text-align: center;
+          border-left: 1px dotted red;
+          border-right: 1px dotted red; }
+          .main-content .area .guide-gap .guide-w > em > span {
+            position: absolute;
+            display: block;
+            font-style: normal;
+            top: 50%;
+            width: 100%;
+            height: 21px;
+            margin-top: -10.5px;
+            padding: 2px; }
+          .main-content .area .guide-gap .guide-w > em > div.line-l, .main-content .area .guide-gap .guide-w > em > div.line-r {
+            position: absolute;
+            border-top: 1px dotted red;
+            top: 15px;
+            height: 1px; }
+            .main-content .area .guide-gap .guide-w > em > div.line-l.line-l, .main-content .area .guide-gap .guide-w > em > div.line-r.line-l {
+              left: 0; }
+            .main-content .area .guide-gap .guide-w > em > div.line-l.line-r, .main-content .area .guide-gap .guide-w > em > div.line-r.line-r {
+              right: 0; }
+      .main-content .area .guide-gap .guide-h {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        text-align: center; }
+        .main-content .area .guide-gap .guide-h > em {
+          position: absolute;
+          left: 50%;
+          top: -1px;
+          width: 30px;
+          margin-left: -15px;
+          border-top: 1px dotted red;
+          border-bottom: 1px dotted red; }
+          .main-content .area .guide-gap .guide-h > em > span {
+            position: absolute;
+            display: block;
+            font-style: normal;
+            top: 50%;
+            width: 30px;
+            height: 21px;
+            margin-top: -10.5px;
+            padding: 2px; }
+          .main-content .area .guide-gap .guide-h > em > div.line-t, .main-content .area .guide-gap .guide-h > em > div.line-b {
+            position: absolute;
+            border-right: 1px dotted red;
+            left: 15px;
+            width: 1px; }
+            .main-content .area .guide-gap .guide-h > em > div.line-t.line-t, .main-content .area .guide-gap .guide-h > em > div.line-b.line-t {
+              top: 0; }
+            .main-content .area .guide-gap .guide-h > em > div.line-t.line-b, .main-content .area .guide-gap .guide-h > em > div.line-b.line-b {
+              bottom: 0; }
+    .main-content .area:hover button {
+      position: absolute;
+      display: block;
+      z-index: 1000; }
+
+.rows {
+  padding: 0; }
+  .rows .col {
+    padding: 10px; }
 
 .modal {
   overflow-y: hidden !important; }
-
-.area {
-  position: absolute;
-  border: 1px dashed red;
-  -webkit-user-select: none;
-  /*background-color:rgba(0,0,255,0.2);*/ }
-  .area.selected {
-    background-color: rgba(255, 0, 0, 0.2); }
-  .area .has-info {
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    color: rgba(255, 255, 255, 0.65);
-    /*background-color:rgba(255,0,0,0.65);*/
-    background-color: rgba(255, 0, 0, 0.35);
-    padding: 5px;
-    -webkit-transition: all 0.5s; }
-    .area .has-info:hover {
-      color: #fff;
-      background-color: rgba(255, 0, 0, 0.65); }
-  .area .guide-outer {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    color: red;
-    font-family: Tahoma;
-    font-size: 12px;
-    font-weight: bold;
-    box-sizing: border-box; }
-    .area .guide-outer .guide-w {
-      position: absolute;
-      border-left: 1px dotted red;
-      border-right: 1px dotted red;
-      width: 100%;
-      height: 100%;
-      text-align: center; }
-      .area .guide-outer .guide-w.guide-dir-b > em {
-        top: auto;
-        bottom: -30px; }
-      .area .guide-outer .guide-w > em {
-        position: absolute;
-        left: -1px;
-        top: -30px;
-        /*width: 100%;*/
-        height: 30px;
-        border-left: 1px dotted red;
-        border-right: 1px dotted red;
-        text-align: center; }
-        .area .guide-outer .guide-w > em > span {
-          position: absolute;
-          display: block;
-          font-style: normal;
-          top: 50%;
-          width: 100%;
-          height: 21px;
-          margin-top: -10.5px;
-          padding: 2px; }
-        .area .guide-outer .guide-w > em > div.line-l, .area .guide-outer .guide-w > em > div.line-r {
-          position: absolute;
-          border-top: 1px dotted red;
-          top: 15px;
-          height: 1px; }
-          .area .guide-outer .guide-w > em > div.line-l.line-l, .area .guide-outer .guide-w > em > div.line-r.line-l {
-            left: 0; }
-          .area .guide-outer .guide-w > em > div.line-l.line-r, .area .guide-outer .guide-w > em > div.line-r.line-r {
-            right: 0; }
-    .area .guide-outer .guide-h {
-      position: absolute;
-      border-top: 1px dotted red;
-      border-bottom: 1px dotted red;
-      width: 100%;
-      height: 100%;
-      text-align: center;
-            /*position: absolute;
-            right: -40px;
-            height: 100%;
-            width: 40px;
-            text-align: center;
-
-
-            border-top: 1px solid red;
-            border-bottom: 1px solid red;*/ }
-      .area .guide-outer .guide-h.guide-dir-l > em {
-        right: auto;
-        left: -30px; }
-      .area .guide-outer .guide-h > em {
-        position: absolute;
-        right: -30px;
+  .modal .modal-dialog {
+    outline: none; }
+    .modal .modal-dialog .modal-header {
+      padding: 10px 15px; }
+      .modal .modal-dialog .modal-header .modal-title {
+        font-family: Play;
+        font-size: 14px; }
+        .modal .modal-dialog .modal-header .modal-title .glyphicon {
+          vertical-align: middle;
+          margin-right: 8px;
+          top: -1px; }
+    .modal .modal-dialog .modal-body {
+      padding: 15px; }
+    .modal .modal-dialog .modal-footer {
+      padding: 15px;
+      margin-top: 0; }
+      .modal .modal-dialog .modal-footer .btn .glyphicon {
+        margin: 0 6px 0 -1px;
         top: -1px;
-        width: 30px;
-        /*height: 100%;*/
-        border-top: 1px dotted red;
-        border-bottom: 1px dotted red; }
-        .area .guide-outer .guide-h > em > span {
-          position: absolute;
-          display: block;
-          font-style: normal;
-          top: 50%;
-          width: 30px;
-          height: 21px;
-          margin-top: -10.5px;
-          padding: 2px; }
-        .area .guide-outer .guide-h > em > div.line-t, .area .guide-outer .guide-h > em > div.line-b {
-          position: absolute;
-          border-right: 1px dotted red;
-          left: 15px;
-          width: 1px; }
-          .area .guide-outer .guide-h > em > div.line-t.line-t, .area .guide-outer .guide-h > em > div.line-b.line-t {
-            top: 0; }
-          .area .guide-outer .guide-h > em > div.line-t.line-b, .area .guide-outer .guide-h > em > div.line-b.line-b {
-            bottom: 0; }
-  .area .guide-inner {
-    font-family: Tahoma;
-    font-size: 12px;
-    font-weight: bold;
-    position: relative;
-    pointer-events: none;
-    width: 100%;
-    height: 100%;
-    border: 1px solid red; }
-    .area .guide-inner span {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      background-color: silver;
-      width: 80px;
-      margin-left: -40px;
-      height: 21px;
-      margin-top: -10.5px;
-      text-align: center;
-      padding: 2px; }
-  .area .guide-gap {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    color: red;
-    font-family: Tahoma;
-    font-size: 12px;
-    font-weight: bold;
-    box-sizing: border-box; }
-    .area .guide-gap .guide-w {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      text-align: center; }
-      .area .guide-gap .guide-w > em {
-        position: absolute;
-        left: -1px;
-        top: 50%;
-        height: 30px;
-        margin-top: -15px;
-        text-align: center;
-        border-left: 1px dotted red;
-        border-right: 1px dotted red; }
-        .area .guide-gap .guide-w > em > span {
-          position: absolute;
-          display: block;
-          font-style: normal;
-          top: 50%;
-          width: 100%;
-          height: 21px;
-          margin-top: -10.5px;
-          padding: 2px; }
-        .area .guide-gap .guide-w > em > div.line-l, .area .guide-gap .guide-w > em > div.line-r {
-          position: absolute;
-          border-top: 1px dotted red;
-          top: 15px;
-          height: 1px; }
-          .area .guide-gap .guide-w > em > div.line-l.line-l, .area .guide-gap .guide-w > em > div.line-r.line-l {
-            left: 0; }
-          .area .guide-gap .guide-w > em > div.line-l.line-r, .area .guide-gap .guide-w > em > div.line-r.line-r {
-            right: 0; }
-    .area .guide-gap .guide-h {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      text-align: center;
-            /*position: absolute;
-            right: -40px;
-            height: 100%;
-            width: 40px;
-            text-align: center;
-
-
-            border-top: 1px solid red;
-            border-bottom: 1px solid red;*/ }
-      .area .guide-gap .guide-h > em {
-        position: absolute;
-        left: 50%;
-        top: -1px;
-        width: 30px;
-        margin-left: -15px;
-        /*height: 100%;*/
-        border-top: 1px dotted red;
-        border-bottom: 1px dotted red; }
-        .area .guide-gap .guide-h > em > span {
-          position: absolute;
-          display: block;
-          font-style: normal;
-          top: 50%;
-          width: 30px;
-          height: 21px;
-          margin-top: -10.5px;
-          padding: 2px; }
-        .area .guide-gap .guide-h > em > div.line-t, .area .guide-gap .guide-h > em > div.line-b {
-          position: absolute;
-          border-right: 1px dotted red;
-          left: 15px;
-          width: 1px; }
-          .area .guide-gap .guide-h > em > div.line-t.line-t, .area .guide-gap .guide-h > em > div.line-b.line-t {
-            top: 0; }
-          .area .guide-gap .guide-h > em > div.line-t.line-b, .area .guide-gap .guide-h > em > div.line-b.line-b {
-            bottom: 0; }
-  .area:hover button {
-    position: absolute;
-    display: block;
-    z-index: 1000; }
+        vertical-align: middle; }
 
 .layer-tree .selected {
   font-weight: bold; }
@@ -496,136 +540,5 @@ html {
 
   91.0% {
     opacity: 0.87; } }
-.rows {
-  padding: 0; }
-  .rows .col {
-    padding: 10px; }
-
-.admin-content {
-  margin-top: 45px;
-  font-family: Play;
-    /*.well {
-    padding: 20px;
-    .input-group, textarea {
-        margin-bottom: 10px;
-        .input-group-addon {
-            background-color: #fff;
-            text-align: left;
-            em {
-                display: block;
-                width: 80px;
-                font-style: normal;
-            }
-        }
-        input[type='text'], select {
-            border-left: none;
-        }
-    }
-    .img-thumbnail {
-        margin-top: 10px;
-        .bokeh {
-            margin: 100px;
-        }
-        img {
-            max-width: 100%;
-        }
-    }
-    .btn {
-        margin-right: 5px;
-        .glyphicon {
-            vertical-align: middle;
-            margin-right: 5px;
-            top: -1px;
-        }
-    }
-    .pull-right {
-        .btn {
-            margin-right: 0 !important;
-            margin-left: 5px;
-        }
-    }
-    /*.ng-dirty.ng-invalid {
-        border-color: #a94442;
-        color: #c7254e;
-        background-color: #f9f2f4;
-    }
-}*/ }
-  .admin-content .list-group-item {
-    font-size: 12px; }
-  .admin-content .aside input[type='text'] {
-    margin-bottom: 10px; }
-  .admin-content .masonry {
-    margin: -8px; }
-    .admin-content .masonry .card {
-      position: relative;
-      margin: 8px;
-      width: 178px;
-      height: 178px;
-      overflow: hidden;
-      background-color: #fff;
-      box-sizing: border-box;
-      -webkit-transition: background 5s; }
-      .admin-content .masonry .card .img-thumbnail > div {
-        width: 168px;
-        height: 168px;
-        box-sizing: border-box;
-        overflow: hidden; }
-        .admin-content .masonry .card .img-thumbnail > div img {
-          width: 100%; }
-      .admin-content .masonry .card .detail {
-        display: none; }
-      .admin-content .masonry .card.active {
-        width: 100%;
-        height: 504px;
-        background-color: #eee;
-        border-top: 3px solid #ccc;
-        border-bottom: 3px solid #ccc;
-        margin: 0;
-        padding: 15px 8px; }
-        .admin-content .masonry .card.active .img-thumbnail {
-          vertical-align: top;
-          display: inline-block; }
-          .admin-content .masonry .card.active .img-thumbnail > div {
-            width: 267px;
-            height: 356px; }
-        .admin-content .masonry .card.active .detail {
-          position: absolute;
-          top: 0;
-          left: 297px;
-          vertical-align: top;
-          display: inline-block; }
-        .admin-content .masonry .card.active .thumbs {
-          margin: 0 -3px; }
-          .admin-content .masonry .card.active .thumbs img {
-            margin: 4px;
-            border: 1px solid #ccc; }
-
-.navbar {
-  font-family: Play;
-  min-height: 0; }
-  .navbar .navbar-brand {
-    padding-top: 7px;
-    padding-bottom: 7px;
-    height: auto; }
-  .navbar.navbar-fixed-top {
-    border-bottom: 1px solid #ccc; }
-    .navbar.navbar-fixed-top .navbar-nav.target-list > li > a {
-      padding: 6px 10px 8px;
-      font-size: 18px;
-      font-weight: bold;
-      color: #fff !important; }
-    .navbar.navbar-fixed-top .navbar-nav > li > a {
-      padding: 5px 6px; }
-    .navbar.navbar-fixed-top input {
-      font-size: 18px;
-      font-weight: bold;
-      padding: 0 5px 2px;
-      line-height: 0;
-      height: 22px;
-      text-align: center;
-      width: 170px;
-      margin-top: 6px;
-      margin-bottom: 6px;
-      color: #777; }
 
 /*# sourceMappingURL=design-guide.css.map */

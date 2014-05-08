@@ -1,0 +1,15 @@
+div.modal-header
+	h4.modal-title
+		span.glyphicon.glyphicon-folder-open
+		| Open...
+div.modal-body
+	div.list-group(style='max-height:225px;overflow-y:auto;margin-bottom:0')
+		a.list-group-item(href='', ng-click='func.load(file)', ng-repeat='file in data.files', style='padding:5px 15px')
+			| {{file.filename}}
+			small(style='margin-left:10px')
+				| ( {{file.size}} bytes )
+			div.pull-right(style='font-family:Tahoma;font-size:11px')
+				{{file.mtime | date : 'yyyy-MM-dd HH:mm:ss'}}
+div.modal-footer
+	a.btn.btn-sm.btn-default(href='',ng-click='func.cancel()')
+		| Cancel

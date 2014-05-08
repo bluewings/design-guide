@@ -140,7 +140,7 @@
 
         var SUCCESS = 0;
 
-        var view, imgEl, orgImgEl, _tmp;
+        var view, imgEl, orgImgEl, _tmp, globalScope = $scope;
 
         view = {
             uploadForm: $element.find('form'),
@@ -165,18 +165,21 @@
         };
 
         $scope.data = {
+            _workName: null,
+            _workId: null,
             srcImg: '/images/design_home_sma.png',
-            canvas: {
+            /*canvas: {
                 imgSrc: null,
                 width: null,
                 height: null
             },
-            regions: [],
+            regions: [],*/
             box: {},
-            jobType: 'divide',
+            //jobType: 'divide',
             history: [],
             historyIndex: 0,
-            panelWidth: 260
+            panelWidth: 260,
+
         };
 
         // select box
@@ -265,51 +268,6 @@
             // 작업내용 초기화
             clear: function () {
 
-
-                var modalInstance = $modal.open({
-                    templateUrl: '/templates/design-guide.modal.test.html',
-                    controller: function ($scope, $modalInstance, items) {
-
-                        /*$scope.items = items;
-  $scope.selected = {
-    item: $scope.items[0]
-  };*/
-
-                        $scope.ok = function () {
-
-                            $http.post('/work', {
-                                aaa: 'test'
-
-                            }).success(function(data) {
-
-                                console.log(data);
-
-                            });
-                            $modalInstance.close(); //$scope.selected.item);
-                        };
-
-                        $scope.cancel = function () {
-                            $modalInstance.dismiss('cancel');
-                        };
-                    },
-                    //size: size,
-                    resolve: {
-                        items: function () {
-                            //return $scope.items;
-                        }
-                    }
-                });
-
-                //var ModalInstanceCtrl = ;    
-
-                /*modalInstance.result.then(function (selectedItem) {
-      $scope.selected = selectedItem;
-    }, function () {
-      $log.info('Modal dismissed at: ' + new Date());
-    });*/
-
-                return;
-
                 $scope.func.unselectBox();
                 $scope.data.box = {
                     x: 0,
@@ -320,23 +278,145 @@
                 $scope.func.divide($scope.data.box);
             },
 
+            // 작업재용 삭제
+            remove: function() {
+
+                if ($scope.data._workId) {
+
+                    if (confirm('삭제하시겠습니가?')) {
+
+                        $http.delete('/work/' + $scope.data._workId).success(function() {
+
+                            $scope.func.clear();
+                            $scope.data._workId = null;
+                            $scope.data._workName = null;
+                        });
+                    }
+                }
+            },
+
             // 작업내용 저장
             save: function () {
 
-                localStorage.setItem(CONFIG.ARCHIVE_KEY, JSON.stringify({
-                    srcImg: $scope.data.srcImg,
-                    box: removeHiddenProp(JSON.parse(JSON.stringify($scope.data.box))),
-                    showConfiguredOnly: $scope.data.showConfiguredOnly,
-                    hideRect: $scope.data.hideRect
-                }));
+                var modalInstance;
 
-                alert('작업내용이 저장되었습니다.');
+                modalInstance = $modal.open({
+                    templateUrl: '/modal/saveAs',
+                    size: 'sm',
+                    controller: function ($scope, $modalInstance, $http, content, workId, name) {
+
+                        $scope.data = {
+                            workId: workId,
+                            name: name,
+                            content: JSON.stringify(content)
+                        };
+
+                        $scope.func = {
+                            save: function (saveAsNew) {
+
+                                var url = '/work';
+
+                                if (!saveAsNew && $scope.data.workId) {
+                                    url += '/' + $scope.data.workId;
+                                }
+
+                                $http.post(url, {
+                                    name: $scope.data.name,
+                                    content: $scope.data.content
+                                }).success(function(data) {
+
+                                    if (data.code == 200) {
+
+                                        $modalInstance.close({
+                                            workId: data.result.id,
+                                            workName: $scope.data.name
+                                        });
+                                    } else {
+                                        alert(data.message);
+                                    }
+                                });
+                            },
+                            cancel: function () {
+
+                                $modalInstance.dismiss('cancel');
+                            }
+                        };
+                    },
+                    resolve: {
+                        workId: function() {
+
+                            return globalScope.data._workId;
+                        },
+                        name: function() {
+
+                            return globalScope.data._workName;
+                        },
+                        content: function () {
+
+                            return {
+                                srcImg: $scope.data.srcImg,
+                                box: removeHiddenProp(JSON.parse(JSON.stringify($scope.data.box))),
+                                showConfiguredOnly: $scope.data.showConfiguredOnly,
+                                hideRect: $scope.data.hideRect
+                            };
+                        }
+                    }
+                });
+
+                modalInstance.result.then(function(info) {
+
+                    if (info && info.workId) {
+                        globalScope.data._workName = info.workName ? info.workName : 'noname';
+                        globalScope.data._workId = info.workId;
+                    }                    
+                });
             },
 
             // 저장된 항목 불러오기
-            load: function () {
+            browse: function() {
 
-                var data = localStorage.getItem(CONFIG.ARCHIVE_KEY);
+                var modalInstance;
+
+                modalInstance = $modal.open({
+                    templateUrl: '/modal/browse',
+                    controller: function ($scope, $modalInstance, $http) {
+
+                        $scope.data = {
+                            files: []
+                        };
+
+                        $scope.func = {
+                            load: function(file) {
+                                $http.get('/work/' + file.workId).success(function(data) {
+
+                                    console.log(file);
+
+                                    if (data.code == 200) {
+                                        globalScope.func.load(data.result.content, file.workId, file.filename);
+                                        $modalInstance.close();
+                                    } else {
+                                        alert(data.message);
+                                    }
+                                });                                
+                            },
+                            cancel: function () {
+                                $modalInstance.dismiss('cancel');
+                            }
+                        };
+                        $http.get('/work').success(function(data) {
+
+                            if (data.code == 200) {
+                                $scope.data.files = data.result.files;
+                            } else {
+                                alert(data.message);
+                            }
+                        });
+                    }
+                });
+            },
+
+            // 저장된 항목 불러오기 (문자열)
+            load: function (data, workId, name) {
 
                 try {
                     data = JSON.parse(data);
@@ -344,6 +424,10 @@
                     $scope.data.box = data.box;
                     $scope.data.showConfiguredOnly = data.showConfiguredOnly;
                     $scope.data.hideRect = data.hideRect;
+                    if (workId) {
+                        $scope.data._workName = name ? name : 'noname';
+                        $scope.data._workId = workId;
+                    }
                 } catch (err) {
                     // noop
                 }
@@ -512,7 +596,7 @@
             }
         });
 
-        $scope.func.load();
+        //$scope.func.load();
 
         function getBoxByIndex(index) {
 
