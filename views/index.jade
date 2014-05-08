@@ -20,24 +20,12 @@ block content
 						span.txt
 							| Open...
 
-				ul.nav.navbar-nav.target-list
-					li.dropdown
-						a.dropdown-toggle(href='', style='background-color:#669acc', data-toggle='dropdown')
-							| {{data.selectedTarget.name}}noname 한글테스트
-							b.caret
-						ul.dropdown-menu
-							li(mg-repeat='target in data.targets')
-								a(ng-click='data.selectedTarget = target', href='') {{target.name}}
-
-
-				div.btn-area
-
 					a(ng-click='func.save()')
 						span.glyphicon.glyphicon-floppy-disk
 						span.txt
 							| Save As..
 
-					
+
 
 					a(ng-show='data._workId', ng-click='func.remove()')
 						span.glyphicon.glyphicon-trash
@@ -47,10 +35,28 @@ block content
 					a(ng-click='func.clear()')
 						span.glyphicon.glyphicon-remove
 						span.txt
-							| Clear
+							| Clear							
+
+				//- ul.nav.navbar-nav.target-list
+					li.dropdown
+						a.dropdown-toggle(href='', style='background-color:#669acc', data-toggle='dropdown')
+							| {{data.selectedTarget.name}}noname 한글테스트
+							b.caret
+						ul.dropdown-menu
+							li(mg-repeat='target in data.targets')
+								a(ng-click='data.selectedTarget = target', href='') {{target.name}}
 
 
-						
+
+
+
+				//- div.pull-right(style='padding-top:6px;font-size:14px')
+					a.badge(href='mailto:darth.vader@navercorp.com')
+						| darth.vader@navercorp.com
+
+
+
+
 
 
 
@@ -59,7 +65,7 @@ block content
 		div.main-content
 
 			div.container
-			
+
 				div.pane(style='width:200px')
 
 					div.panel.panel-default
@@ -84,7 +90,7 @@ block content
 						div.panel-heading
 
 							span.glyphicon.glyphicon-picture(style='margin-right:7px')
-							| Image Preview
+							| Image Preview - {{data._workName}}
 
 						div.panel-body(style='background-color:#81848d')
 
@@ -110,7 +116,7 @@ block content
 							| Area Infomation
 
 							div.pull-right(style='margin-top:-1px')
-								button.btn.btn-xs.btn-primary(ng-click="func.divide(data.selectedIndex)", ng-disabled="data.selectedBox.boxes.length ? 'disabled' : false" , style='font-size:10px')		
+								button.btn.btn-xs.btn-primary(ng-click="func.divide(data.selectedIndex)", ng-disabled="data.selectedBox.boxes.length ? 'disabled' : false" , style='font-size:10px')
 									| DIVIDE
 
 								button.btn.btn-xs.btn-default(ng-click='func.unselectBox()', style='font-size:10px')
@@ -198,7 +204,7 @@ block content
 
 									select.form-control.input-sm(ng-model='data.selectedBox.gapType', style='margin-top:10px')
 										option(value='width') width
-										option(value='height') height			
+										option(value='height') height
 
 						div.panel-heading(style='border-top:1px solid #ddd')
 
@@ -206,7 +212,7 @@ block content
 							| Area Preview & Color Picker (MOUSEOVER & CLICK)
 
 						div.panel-body
-	
+
 							div.color-picker(style='position:relative')
 								canvas(width='{{data.selectedBox._previewW}}',height='{{data.selectedBox._previewH}}',data-scaled, style='border:1px solid #ddd;display:block')
 

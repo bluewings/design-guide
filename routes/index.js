@@ -175,6 +175,7 @@ router.get('/work/:id', function (req, res) {
                         code: 200,
                         message: 'ok',
                         result: {
+                            filename: matches[1],
                             content: data
                         }
                     });

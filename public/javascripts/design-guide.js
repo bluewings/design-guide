@@ -152,11 +152,12 @@
         };
     });
 
-    app.controller('MainCtrl', function ($scope, $element, $http, $timeout, $modal) {
+    app.controller('MainCtrl', function ($scope, $element, $http, $timeout, $location, $modal) {
 
         var SUCCESS = 0;
 
-        var view, imgEl, orgImgEl, _tmp, globalScope = $scope;
+        var view, imgEl, orgImgEl, _tmp, globalScope = $scope,
+            _drag, search = $location.search();
 
         view = {
             uploadForm: $element.find('form'),
@@ -176,8 +177,6 @@
             ctx: null
         };
 
-        var _drag;
-
         _drag = {
             ondrag: false,
             frIndex: null,
@@ -193,6 +192,15 @@
             historyIndex: 0,
             panelWidth: 400
         };
+
+        $scope.$watch('data._workId', function(newValue, oldValue) {
+
+            if (newValue) {
+                $location.search({workId: newValue}).replace();
+            } else {
+                $location.search({}).replace();
+            }
+        });
 
         // select box
         $element.delegate('[data-box-index]', 'click', function (event) {
@@ -626,6 +634,15 @@
             }
         });
 
+        // 최초 인입시 파라미터값 확인 (작업ID 가 있으면 로드)
+        if (search && search.workId) {
+            $http.get('/work/' + search.workId).success(function(data) {
+
+                if (data.code == 200) {
+                    $scope.func.load(data.result.content, search.workId, data.result.filename);
+                }
+            });
+        }
         //$scope.func.load();
 
         function getBoxByIndex(index) {
