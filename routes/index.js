@@ -88,30 +88,28 @@ router.post('/work/:id', function (req, res) {
         matches = allFiles[inx].match(/^(.*)\.([0-9a-zA-Z]{5})\.json$/);
         if (matches && matches[2] == req.params.id) {
             fs.unlink(filepath, function (err, data) {
-                // do nothing
+                filename = path.join(__dirname, '..', 'public', 'works', req.body.name + '.' + req.params.id + '.json');
+
+                fs.writeFile(filename, req.body.content, function (err) {
+
+                    if (err) {
+                        res.jsonp({
+                            code: 500,
+                            message: err
+                        });
+                    } else {
+                        res.jsonp({
+                            code: 200,
+                            message: 'ok',
+                            result: {
+                                id: req.params.id
+                            }
+                        });
+                    }
+                });                
             });
         }
     }
-
-    filename = path.join(__dirname, '..', 'public', 'works', req.body.name + '.' + req.params.id + '.json');
-
-    fs.writeFile(filename, req.body.content, function (err) {
-
-        if (err) {
-            res.jsonp({
-                code: 500,
-                message: err
-            });
-        } else {
-            res.jsonp({
-                code: 200,
-                message: 'ok',
-                result: {
-                    id: req.params.id
-                }
-            });
-        }
-    });
 });
 
 // WORK - Read (list)
