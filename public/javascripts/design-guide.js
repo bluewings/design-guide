@@ -229,9 +229,9 @@
                         newHtml.push(html[inx]);
                     }
                 }
-                return newHtml.join('\n'); //.replace(/\</g, '&lt;').replace(/\>/g, '&gt;');    
+                return $sce.trustAsHtml(newHtml.join('\n'));
             } else {
-                return html.join('\n'); //.replace(/\</g, '&lt;').replace(/\>/g, '&gt;');    
+                return $sce.trustAsHtml(html.join('\n'));
             }
         };
     });
@@ -289,7 +289,7 @@
             }
         });
 
-        $scope.$watch('data.selectedIndex ', function (newValue, oldValue) {
+        $scope.$watch('data.selectedIndex', function (newValue, oldValue) {
 
             if (newValue) {
                 $timeout(function () {
@@ -297,7 +297,7 @@
                     $(window).on('scroll.connectLine resize.connectLine', function () {
 
                         util.connectLine($('.panel-selected'), $('.area[data-box-index="' + newValue + '"]'));
-                    }).trigger('scroll.connectLine resize.connectLine');
+                    }).trigger('scroll.connectLine');
                 });
             } else {
                 $(window).off('scroll.connectLine resize.connectLine');

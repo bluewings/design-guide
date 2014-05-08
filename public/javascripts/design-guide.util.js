@@ -67,7 +67,8 @@ var designGuideUtil;
         put: function () {
 
             var prev = this.storage[this.index],
-                curr = this._getSnapshot(), inx, a1, a2;
+                curr = this._getSnapshot(),
+                inx, a1, a2;
 
             if (prev != curr) {
                 this.storage.splice(this.index + 1, this.storage.length - this.index - 1);
@@ -108,7 +109,7 @@ var designGuideUtil;
             }
             this.sync();
         }
-    };    
+    };
 
     function getPixel(imageData, x, y) {
 
@@ -128,212 +129,112 @@ var designGuideUtil;
         return Math.sqrt(Math.pow(pixel1.r - pixel2.r, 2) + Math.pow(pixel1.g - pixel2.g, 2) + Math.pow(pixel1.b - pixel2.b, 2));
     };
 
-    function showRelation(fromEl, toEl) {
+    function connectLine(fromEl, toEl) {
 
         var lineEl = $('[data-role="lineEl"]'),
-            //hlEl = $('[data-role="lineEl-highlight"]'),
-            //iframe = $(view.previewIframe),
             from, to, canvas, ctx, top, left, width, height,
             dom = $('.pane-selected');
 
+        try {
 
-        if (lineEl.size() == 0) {
-            lineEl = $('<div data-role="lineEl" class="line-el"><canvas></canvas></div>');
-            dom.append(lineEl);
+
+            if (lineEl.size() == 0) {
+                lineEl = $('<div data-role="lineEl" class="line-el"><canvas></canvas></div>');
+                dom.append(lineEl);
+            }
+
+            canvas = lineEl.find('canvas');
+            ctx = canvas.get(0).getContext('2d');
+
+            from = {
+                top: fromEl.offset().top + fromEl.find('.panel-heading').eq(0).outerHeight(),
+                top_: fromEl.offset().top + fromEl.find('.panel-heading').eq(0).outerHeight() + fromEl.find('.panel-body').eq(0).outerHeight(),
+                left: fromEl.offset().left
+            };
+
+            to = {
+                top: toEl.offset().top,
+                top_: toEl.offset().top + toEl.outerHeight(),
+                left: toEl.offset().left + toEl.outerWidth()
+            };
+
+            top = (to.top < from.top ? to.top : from.top) - 10;
+            left = (to.left < from.left ? to.left : from.left) - 10;
+            width = parseInt(Math.abs(from.left - to.left), 10) + 20;
+            height = parseInt(Math.abs(from.top - to.top), 10) + 220;
+
+            lineEl.css({
+                display: 'none',
+                position: 'absolute',
+                pointerEvents: 'none',
+                top: top,
+                left: left,
+                width: width,
+                height: height
+                //zindex: 100
+            });
+
+            canvas.attr({
+                width: width,
+                height: height
+            });
+
+            ctx.clearRect(0, 0, width, height);
+
+            //ctx.setLineDash([3, 6]);
+            ctx.lineWidth = 0.5;
+            ctx.lineCap = 'round';
+
+            //ctx.strokeStyle = '#777';
+            ctx.strokeStyle = 'rgba(255,0,0,0.1)';
+            ctx.beginPath();
+            ctx.moveTo(from.left - left, from.top - top);
+
+            ctx.bezierCurveTo(
+            Math.abs(from.left - to.left) / 2,
+            from.top - top,
+            Math.abs(from.left - to.left) / 2,
+            to.top - top,
+            to.left - left,
+            to.top - top);
+
+            ctx.stroke();
+
+            ctx.lineTo(to.left - left, to.top_ - top);
+            ctx.strokeStyle = 'rgba(255,255,255,0)';
+            ctx.stroke();
+
+            ctx.bezierCurveTo(
+            Math.abs(from.left - to.left) / 2,
+            to.top_ - top,
+            Math.abs(from.left - to.left) / 2,
+            from.top_ - top,
+            from.left - left,
+            from.top_ - top);
+
+            ctx.strokeStyle = 'rgba(255,0,0,0.5)';
+            ctx.stroke();
+            ctx.strokeStyle = 'rgba(255,255,255,0)';
+
+            ctx.lineTo(from.left - left, from.top - top);
+
+            ctx.stroke();
+
+            ctx.fillStyle = 'rgba(255,0,0,0.1)';
+            ctx.fill();
+
+            lineEl.css('display', 'block');
+
+        } catch (err) {
+            // noop
         }
-
-        canvas = lineEl.find('canvas');
-        ctx = canvas.get(0).getContext('2d');
-
-        from = {
-            top: fromEl.offset().top + fromEl.find('.panel-heading').eq(0).outerHeight(),
-            top_: fromEl.offset().top + fromEl.find('.panel-heading').eq(0).outerHeight() + fromEl.find('.panel-body').eq(0).outerHeight(),
-            left: fromEl.offset().left
-        };
-
-        to = {
-            top: toEl.offset().top,
-            top_: toEl.offset().top + toEl.outerHeight(),
-            left: toEl.offset().left + toEl.outerWidth()
-        };        
-
-        top = (to.top < from.top ? to.top : from.top) - 10;
-        left = (to.left < from.left ? to.left : from.left) - 10;
-        width = parseInt(Math.abs(from.left - to.left), 10) + 20;
-        height = parseInt(Math.abs(from.top - to.top), 10) + 220;
-
-        lineEl.css({
-            display: 'none',
-            position: 'absolute',
-            pointerEvents: 'none',
-            top: top,
-            left: left,
-            width: width,
-            height: height,
-            zindex: 1001
-        });
-
-        canvas.attr({
-            width: width,
-            height: height
-        });
-
-        ctx.clearRect(0, 0, width, height);
-
-        //ctx.setLineDash([3, 6]);
-        ctx.lineWidth = 0.5;
-        ctx.lineCap = 'round';
-
-        //ctx.strokeStyle = '#777';
-        ctx.strokeStyle = 'rgba(255,0,0,0.1)';
-        ctx.beginPath();
-        ctx.moveTo(from.left - left, from.top - top);
-
-        ctx.bezierCurveTo(
-        Math.abs(from.left - to.left) / 2,
-        from.top - top,
-        Math.abs(from.left - to.left) / 2,
-        to.top - top,
-        to.left - left,
-        to.top - top);
-
-        ctx.stroke();
-
-        ctx.lineTo(to.left - left, to.top_ - top);
-        ctx.strokeStyle = 'rgba(255,255,255,0)';
-        ctx.stroke();
-
-        ctx.bezierCurveTo(
-        Math.abs(from.left - to.left) / 2,
-        to.top_ - top,
-        Math.abs(from.left - to.left) / 2,
-        from.top_ - top,
-        from.left - left,
-        from.top_ - top);     
-
-        ctx.strokeStyle = 'rgba(255,0,0,0.5)';   
-        ctx.stroke();
-        ctx.strokeStyle = 'rgba(255,255,255,0)';
-
-        ctx.lineTo(from.left - left, from.top - top);
-
-        ctx.stroke();
-
-        ctx.fillStyle = 'rgba(255,0,0,0.1)';
-        ctx.fill();
-
-
-        lineEl.css('display', 'block');
-        return;
-
-        ctx.stroke();
-        ctx.closePath();
-
-        ctx.beginPath();
-        ctx.arc(from.left - left, from.top - top, 3, 0, 2 * Math.PI, false);
-        ctx.closePath();
-        //ctx.fillStyle = '#555';
-        ctx.fillStyle = 'red';
-        ctx.fill();
-
-        ctx.beginPath();
-        ctx.arc(to.left - left, to.top - top, 3, 0, 2 * Math.PI, false);
-        ctx.closePath();
-        //ctx.fillStyle = '#555';
-        ctx.fillStyle = 'red';
-        ctx.fill();
-        lineEl.css('display', 'block');
-    }        
-
-    function showRelation_backup(fromEl, toEl) {
-
-        var lineEl = $('[data-role="lineEl"]'),
-            //hlEl = $('[data-role="lineEl-highlight"]'),
-            //iframe = $(view.previewIframe),
-            from, to, canvas, ctx, top, left, width, height,
-            dom = $('.pane-selected');
-
-
-        if (lineEl.size() == 0) {
-            lineEl = $('<div data-role="lineEl" class="line-el"><canvas></canvas></div>');
-            dom.append(lineEl);
-        }
-
-        canvas = lineEl.find('canvas');
-        ctx = canvas.get(0).getContext('2d');
-
-        from = {
-            top: parseInt(fromEl.offset().top, 10),
-            left: fromEl.offset().left
-        };
-
-        to = {
-            top: parseInt(toEl.offset().top, 10),
-            left: parseInt(toEl.offset().left + toEl.outerWidth(), 10) + 0
-        };        
-
-        top = (to.top < from.top ? to.top : from.top) - 10;
-        left = (to.left < from.left ? to.left : from.left) - 10;
-        width = parseInt(Math.abs(from.left - to.left), 10) + 20;
-        height = parseInt(Math.abs(from.top - to.top), 10) + 20;
-
-        lineEl.css({
-            display: 'none',
-            position: 'absolute',
-            pointerEvents: 'none',
-            top: top,
-            left: left,
-            width: width,
-            height: height,
-            zindex: 1001
-        });
-
-        canvas.attr({
-            width: width,
-            height: height
-        });
-
-        ctx.clearRect(0, 0, width, height);
-
-        ctx.setLineDash([3, 6]);
-        ctx.lineWidth = 2;
-        ctx.lineCap = 'round';
-
-        //ctx.strokeStyle = '#777';
-        ctx.strokeStyle = 'red';
-        ctx.beginPath();
-        ctx.moveTo(from.left - left, from.top - top);
-
-        ctx.bezierCurveTo(
-        parseInt(Math.abs(from.left - to.left) / 2, 10), from.top - top,
-        parseInt(Math.abs(from.left - to.left) / 2, 10), to.top - top,
-        to.left - left,
-        to.top - top);
-
-        ctx.stroke();
-        ctx.closePath();
-
-        ctx.beginPath();
-        ctx.arc(from.left - left, from.top - top, 3, 0, 2 * Math.PI, false);
-        ctx.closePath();
-        //ctx.fillStyle = '#555';
-        ctx.fillStyle = 'red';
-        ctx.fill();
-
-        ctx.beginPath();
-        ctx.arc(to.left - left, to.top - top, 3, 0, 2 * Math.PI, false);
-        ctx.closePath();
-        //ctx.fillStyle = '#555';
-        ctx.fillStyle = 'red';
-        ctx.fill();
-        lineEl.css('display', 'block');
-    }    
+    }
 
     designGuideUtil = {
 
         history: _history,
 
-        connectLine: showRelation,
+        connectLine: connectLine,
 
         loadImg: function (src, callback) {
 
