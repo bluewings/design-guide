@@ -11,6 +11,46 @@ body {
   font-family: Nanum Gothic,AppleGothic,sans-serif;
   font-size: 12px; }
 
+span.ico {
+  background-image: url("/images/ico_guide_type_revert.png");
+  display: inline-block;
+  width: 40px;
+  height: 40px; }
+  span.ico.ico-outer {
+    background-position: 0 0; }
+  span.ico.ico-inner {
+    background-position: -40px 0; }
+  span.ico.ico-gap {
+    background-position: -80px 0; }
+
+.btn-default span.ico {
+  background-image: url("/images/ico_guide_type.png"); }
+
+span.ico-align {
+  background-image: url("/images/ico_outer_type_revert.png");
+  display: inline-block;
+  width: 40px;
+  height: 40px; }
+  span.ico-align.ico-tl {
+    background-position: -80px 0; }
+  span.ico-align.ico-tr {
+    background-position: -120px 0; }
+  span.ico-align.ico-bl {
+    background-position: -40px 0; }
+  span.ico-align.ico-br {
+    background-position: 0 0; }
+  span.ico-align.ico-t {
+    background-position: -80px -40px; }
+  span.ico-align.ico-b {
+    background-position: -120px -40px; }
+  span.ico-align.ico-l {
+    background-position: -40px -40px; }
+  span.ico-align.ico-r {
+    background-position: 0 -40px; }
+
+.btn-default span.ico-align {
+  background-image: url("/images/ico_outer_type.png"); }
+
 .navbar {
   font-family: Play;
   min-height: 0; }
@@ -52,17 +92,42 @@ body {
         .navbar.navbar-fixed-top .btn-area > a:hover span.txt {
           width: 60px; }
 
+.color-picker .floating {
+  pointer-events: none;
+  opacity: 0;
+  -webkit-transition: opacity 0.35s;
+  transition: opacity 0.35s; }
+.color-picker:hover .floating {
+  opacity: 1; }
+
 .main-content {
   margin-top: 45px; }
   .main-content .pane {
     float: left;
-    background-color: yellow;
     margin-right: 10px; }
   .main-content .easel {
     margin: 30px;
     position: relative; }
   .main-content .hide-rect .area {
     border: none; }
+  .main-content .panel .panel-heading {
+    padding: 5px 10px;
+    margin-top: 1px;
+    font-family: Play;
+    fpmt-size: 14px; }
+    .main-content .panel .panel-heading .glyphicon {
+      font-size: 18px;
+      vertical-align: middle;
+      top: -1px;
+      margin-right: 3px; }
+  .main-content .panel .panel-body {
+    padding: 10px; }
+    .main-content .panel .panel-body label {
+      font-weight: normal;
+      margin-bottom: 10px; }
+      .main-content .panel .panel-body label input[type=checkbox] {
+        vertical-align: middle;
+        margin: -1px 3px 0 0; }
   .main-content .area {
     position: absolute;
     border: 1px dashed red;
@@ -291,8 +356,20 @@ body {
         top: -1px;
         vertical-align: middle; }
 
-.layer-tree .selected {
-  font-weight: bold; }
+.layer-tree {
+  min-height: 200px;
+  max-height: 685px;
+  overflow-y: auto;
+  margin: 0 -10px;
+  border-top: 1px solid #ddd;
+  padding-bottom: 10px; }
+  .layer-tree .selected {
+    font-weight: bold; }
+  .layer-tree .list-group {
+    margin-bottom: 0; }
+    .layer-tree .list-group .list-group-item {
+      padding: 10px 0 0 15px;
+      border: none; }
 
 .hove2 {
   background-color: rgba(0, 255, 0, 0.1); }

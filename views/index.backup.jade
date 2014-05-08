@@ -1,0 +1,218 @@
+extends layout
+
+block content
+
+	div(ng-app='design-guide', ng-controller='MainCtrl')
+		nav.navbar.navbar-default.navbar-fixed-top(role='navigation')
+			.container
+				.navbar-header
+					strong.navbar-brand
+						| Design Guide Helper v0.1
+
+
+
+
+
+				div.btn-area(style='border-left:1px solid silver;margin-left:5px')
+
+					a(ng-click='func.browse()')
+						span.glyphicon.glyphicon-folder-open
+						span.txt
+							| Open...
+
+				ul.nav.navbar-nav.target-list
+					li.dropdown
+						a.dropdown-toggle(href='', style='background-color:#669acc', data-toggle='dropdown')
+							| {{data.selectedTarget.name}}noname 한글테스트
+							b.caret
+						ul.dropdown-menu
+							li(mg-repeat='target in data.targets')
+								a(ng-click='data.selectedTarget = target', href='') {{target.name}}
+
+
+				div.btn-area
+
+					a(ng-click='func.save()')
+						span.glyphicon.glyphicon-floppy-disk
+						span.txt
+							| Save As..
+
+					
+
+					a(ng-show='data._workId', ng-click='func.remove()')
+						span.glyphicon.glyphicon-trash
+						span.txt
+							| Delete
+
+					a(ng-click='func.clear()')
+						span.glyphicon.glyphicon-remove
+						span.txt
+							| Clear
+
+
+						
+
+
+
+
+
+		div.main-content
+
+			div.container
+			
+				div.pane(style='width:200px')
+
+					div.panel.panel-default
+
+						div.panel-heading
+
+							span.glyphicon.glyphicon-tree-conifer
+							| TreeView Explorer
+
+						div.panel-body
+
+							label
+								input(type='checkbox', ng-model='data.showConfiguredOnly')
+								| 설정이 존재하는 노드만 표시
+
+							div.layer-tree(ng-bind-html="data.box | layerTree : data.showConfiguredOnly")
+
+				div.pane(style='min-width:600px')
+
+					div.panel.panel-default
+
+						div.panel-heading
+
+							span.glyphicon.glyphicon-picture(style='margin-right:7px')
+							| Image Preview
+
+						div.panel-body(style='background-color:#81848d')
+
+							div(style='background-color:#fff;margin:-10px;padding:10px 10px 0')
+								label
+									input(type='checkbox', ng-model='data.hideRect')
+									| 분할 영역 표시
+
+							div(style='position:relative', class='{{data.hideRect ? "hide-rect" : ""}}')
+								div.easel
+									img(ng-src="{{data.srcImg}}")
+									div(ng-bind-html="data.box | layerBox")
+
+									div.panel.panel-default(ng-show='data.selectedBox'
+										style='position:absolute;width:{{data.panelWidth}};top:{{data.selectedBox.y}}px;right:{{data.panelWidth * -1 - 73}}px'
+										)
+
+										div.panel-heading
+
+											span.glyphicon.glyphicon-pencil
+											| Area Infomation
+
+											div.pull-right(style='margin-top:-1px')
+												button.btn.btn-xs.btn-primary(ng-click="func.divide(data.selectedIndex)", ng-disabled="data.selectedBox.boxes.length ? 'disabled' : false" , style='font-size:10px')		
+													| DIVIDE
+
+
+
+												button.btn.btn-xs.btn-default(ng-click='func.unselectBox()', style='font-size:10px')
+													| CLOSE
+
+										div.panel-body
+
+											input.form-control.input-sm(type='text',
+												ng-model='data.selectedBox.name', style='margin-bottom:10px', placeholder='Name of this Area')
+
+											textarea.form-control.input-sm(rows='5', ng-model='data.selectedBox.desc', placeholder='Notes')
+
+										div.panel-heading(style='border-top:1px solid #ddd')
+
+											span.glyphicon.glyphicon-resize-vertical
+											| Guide
+
+										div.panel-body
+
+											div
+
+												div.btn-group
+
+													button.btn.btn-xs(
+														ng-class='data.selectedBox.guideType == "outer" ? "btn-primary" : "btn-default"'
+														ng-click='func.setGuideType("outer")')
+														span.ico.ico-outer
+
+													button.btn.btn-xs(
+														ng-class='data.selectedBox.guideType == "inner" ? "btn-primary" : "btn-default"'
+														ng-click='func.setGuideType("inner")')
+														span.ico.ico-inner
+
+													button.btn.btn-xs(
+														ng-class='data.selectedBox.guideType == "gap" ? "btn-primary" : "btn-default"'
+														ng-click='func.setGuideType("gap")')
+														span.ico.ico-gap
+
+												div(ng-show='data.selectedBox.guideType == "outer"')
+
+													select.form-control.input-sm(ng-model='data.selectedBox.outerType', style='margin-bottom:10px;margin-top:10px')
+														option(value='width') width
+														option(value='height') height
+														option(value='width x height') width x height
+
+													div.btn-group(ng-show='data.selectedBox.outerType == "width"')
+
+														button.btn.btn-xs(ng-click='func.setGuideAlign("t")',
+															class="btn-{{data.selectedBox.guideAlignV == 't' ? 'primary' : 'default'}}")
+															span.ico-align.ico-t
+
+														button.btn.btn-xs(ng-click='func.setGuideAlign("b")',
+															class="btn-{{data.selectedBox.guideAlignV == 'b' ? 'primary' : 'default'}}")
+															span.ico-align.ico-b
+
+													div.btn-group(ng-show='data.selectedBox.outerType == "height"')
+
+														button.btn.btn-xs(ng-click='func.setGuideAlign("l")',
+															class="btn-{{data.selectedBox.guideAlignH == 'l' ? 'primary' : 'default'}}")
+															span.ico-align.ico-l
+
+														button.btn.btn-xs(ng-click='func.setGuideAlign("r")',
+															class="btn-{{data.selectedBox.guideAlignH == 'r' ? 'primary' : 'default'}}")
+															span.ico-align.ico-r
+
+													div.btn-group(ng-show='data.selectedBox.outerType == "width x height"')
+
+														button.btn.btn-xs(ng-click='func.setGuideAlign("tl")',
+															class="btn-{{data.selectedBox.guideAlignV == 't' && data.selectedBox.guideAlignH == 'l' ? 'primary' : 'default'}}")
+															span.ico-align.ico-tl
+
+														button.btn.btn-xs(ng-click='func.setGuideAlign("tr")',
+															class="btn-{{data.selectedBox.guideAlignV == 't' && data.selectedBox.guideAlignH == 'r' ? 'primary' : 'default'}}")
+															span.ico-align.ico-tr
+
+														button.btn.btn-xs(ng-click='func.setGuideAlign("bl")',
+															class="btn-{{data.selectedBox.guideAlignV == 'b' && data.selectedBox.guideAlignH == 'l' ? 'primary' : 'default'}}")
+															span.ico-align.ico-bl
+
+														button.btn.btn-xs(ng-click='func.setGuideAlign("br")',
+															class="btn-{{data.selectedBox.guideAlignV == 'b' && data.selectedBox.guideAlignH == 'r' ? 'primary' : 'default'}}")
+															span.ico-align.ico-br
+
+												div(ng-show='data.selectedBox.guideType == "gap"')
+
+													select.form-control.input-sm(ng-model='data.selectedBox.gapType', style='margin-top:10px')
+														option(value='width') width
+														option(value='height') height			
+
+										div.panel-heading(style='border-top:1px solid #ddd')
+
+											span.glyphicon.glyphicon-picture
+											| Area Preview & Color Picker (MOUSEOVER & CLICK)
+
+										div.panel-body
+					
+											div.color-picker(style='position:relative')
+												canvas(width='{{data.selectedBox._previewW}}',height='{{data.selectedBox._previewH}}',data-scaled, style='border:1px solid #ddd;display:block')
+
+												div.floating(style='position:absolute;top:-5px;left:-160px; width:150px;height:150px;border:5px solid #444;background-color:#fff')
+
+													canvas(class='magnify', width='140', height='140')
+
+													div(style='background-color:#444;color:#fff;font-weight:bold;position:absolute;top:-5px;right:-5px;padding:3px 10px;font-family:Consolas;font-size:14px')
+														| {{data.colorPicked}}

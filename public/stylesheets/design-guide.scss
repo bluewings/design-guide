@@ -30,6 +30,63 @@ body {
     font-size: $default-font-size;
 }
 
+span.ico {
+    background-image: url("/images/ico_guide_type_revert.png");
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    &.ico-outer {
+        background-position: 0 0;
+    }
+    &.ico-inner {
+        background-position: -40px 0;
+    }
+    &.ico-gap {
+        background-position: -80px 0;
+    }
+}
+.btn-default {
+    span.ico {
+        background-image: url("/images/ico_guide_type.png");
+    }
+}
+
+span.ico-align {
+    background-image: url("/images/ico_outer_type_revert.png");
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    &.ico-tl {
+        background-position: -80px 0;
+    }
+    &.ico-tr {
+        background-position: -120px 0;
+    }
+    &.ico-bl {
+        background-position: -40px 0;
+    }
+    &.ico-br {
+        background-position: 0 0;
+    }
+    &.ico-t {
+        background-position: -80px -40px;
+    }
+    &.ico-b {
+        background-position: -120px -40px;
+    }
+    &.ico-l {
+        background-position: -40px -40px;
+    }
+    &.ico-r {
+        background-position: 0 -40px;
+    }
+}
+.btn-default {
+    span.ico-align {
+        background-image: url("/images/ico_outer_type.png");
+    }
+}
+
 .navbar {
     font-family: $header-font;
     min-height: 0;
@@ -90,21 +147,59 @@ body {
         }
     }
 }
-
+.color-picker {
+    .floating {
+        pointer-events:none;
+        opacity:0;
+        
+        -webkit-transition:opacity 0.35s;
+        transition:opacity 0.35s;
+    }
+    &:hover {
+        .floating {
+            opacity:1;
+            
+        }
+    }
+}
 .main-content {
     margin-top: 45px;
     .pane {
-        float:left;
-        background-color:yellow;
-        margin-right:10px;
+        float: left;
+        margin-right: 10px;
     }
     .easel {
-        margin:30px;
-        position:relative;
+        margin: 30px;
+        position: relative;
     }
     .hide-rect {
         .area {
             border: none;
+        }
+    }
+    .panel {
+        .panel-heading {
+            padding: 5px 10px;
+            .glyphicon {
+                font-size: 18px;
+                vertical-align: middle;
+                top: -1px;
+                margin-right: 3px;
+            }
+            margin-top: 1px;
+            font-family: $header-font;
+            fpmt-size: 14px;
+        }
+        .panel-body {
+            padding: 10px;
+            label {
+                font-weight: normal;
+                margin-bottom: 10px;
+                input[type=checkbox] {
+                    vertical-align: middle;
+                    margin: -1px 3px 0 0;
+                }
+            }
         }
     }
     .area {
@@ -392,6 +487,19 @@ body {
 .layer-tree {
     .selected {
         font-weight: bold;
+    }
+    min-height: 200px;
+    max-height: 685px;
+    overflow-y: auto;
+    margin: 0 -10px;
+    border-top: 1px solid #ddd;
+    padding-bottom: 10px;
+    .list-group {
+        .list-group-item {
+            padding: 10px 0 0 15px;
+            border: none;
+        }
+        margin-bottom: 0;
     }
 }
 

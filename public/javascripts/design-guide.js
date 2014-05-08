@@ -131,12 +131,12 @@
             prefix = prefix ? prefix : '';
 
             if (box.boxes) {
-                html.push('<ul>');
+                html.push('<ul class="list-group">');
                 for (inx = 0; inx < box.boxes.length; inx++) {
                     each = box.boxes[inx];
                     display = !confOnly || hasConfiguredChild(each);
                     if (display) {
-                        html.push('<li data-box-index="' + prefix + inx + '"> ');
+                        html.push('<li class="list-group-item" data-box-index="' + prefix + inx + '"> ');
                         html.push('<div class="' + (each.selected ? 'selected' : '') + '"> ');
                         html.push(each.name ? each.name : 'item ' + inx);
                         html.push('</div> ');
@@ -191,7 +191,7 @@
             box: {},
             history: [],
             historyIndex: 0,
-            panelWidth: 260
+            panelWidth: 400
         };
 
         // select box
@@ -448,6 +448,7 @@
             load: function (data, workId, name) {
 
                 try {
+                    $scope.func.unselectBox();
                     data = JSON.parse(data);
                     $scope.data.srcImg = data.srcImg;
                     $scope.data.box = data.box;

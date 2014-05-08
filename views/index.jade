@@ -65,13 +65,15 @@ block content
 					div.panel.panel-default
 
 						div.panel-heading
-							| tree node
+
+							span.glyphicon.glyphicon-tree-conifer
+							| TreeView Explorer
 
 						div.panel-body
 
 							label
 								input(type='checkbox', ng-model='data.showConfiguredOnly')
-								| 설정이 존재하는 노드만 표시합니다.
+								| 설정이 존재하는 노드만 표시
 
 							div.layer-tree(ng-bind-html="data.box | layerTree : data.showConfiguredOnly")
 
@@ -79,123 +81,138 @@ block content
 
 					div.panel.panel-default
 
-						div.panel-body(style='background-color:#4c505c')
+						div.panel-heading
 
-							label
-								input(type='checkbox', ng-model='data.hideRect')
-								| 영역표시를 숨깁니다.
+							span.glyphicon.glyphicon-picture(style='margin-right:7px')
+							| Image Preview
+
+						div.panel-body(style='background-color:#81848d')
+
+							div(style='background-color:#fff;margin:-10px;padding:10px 10px 0')
+								label
+									input(type='checkbox', ng-model='data.hideRect')
+									| 분할 영역 표시
 
 							div(style='position:relative', class='{{data.hideRect ? "hide-rect" : ""}}')
-								div.easel
+								div.easel(style='margin-top:50px')
 									img(ng-src="{{data.srcImg}}")
-									div(ng-bind-html="data.box | layerBox")							
-
-
-									div.panel.panel-default(ng-show='data.selectedBox'
-										style='position:absolute;width:300px;top:{{data.selectedBox.y}}px;right:-355px'
-										)
-										div.panel-body
-											button.btn.btn-sm.btn-default(
-												ng-click="func.divide(data.selectedIndex)"
-												ng-disabled="data.selectedBox.boxes.length ? 'disabled' : false")
-												span.glyphicon.glyphicon-th-large
-
-											button.btn.btn-sm(
-												ng-class='data.selectedBox.guideType == "outer" ? "btn-primary" : ""'
-												ng-click='func.setGuideType("outer")')
-												span.glyphicon.glyphicon-th-large
-												| 테두리표시
-											button.btn.btn-sm(
-												ng-class="data.selectedBox.guideType == 'inner' ? 'btn-primary' : ''"
-												ng-click="func.setGuideType('inner')")
-												span.glyphicon.glyphicon-th-large
-												| 내부표시
-											button.btn.btn-sm(
-												ng-class="data.selectedBox.guideType == 'gap' ? 'btn-primary' : ''"
-												ng-click="func.setGuideType('gap')")
-												span.glyphicon.glyphicon-th-large
-												| 간격표시
-
-											button.btn.btn-sm(
-												ng-click='func.unselectBox()'
-											)
-												| 닫기
-
-											br
-
-											br
-
-					
-
-											canvas(width='{{data.selectedBox._previewW}}',height='{{data.selectedBox._previewH}}',data-scaled)
-
-											canvas(class='magnify', width='100', height='100')
-
-											
-
-											{{data.colorPicked}}
+									div(ng-bind-html="data.box | layerBox")
 
 
 
-											br
-											br
+				div.pane(style='width:1px')
 
+					div.panel.panel-default(ng-show='data.selectedBox',style='width:{{data.panelWidth + 24}}px;box-sizing:border-box')
 
+						div.panel-heading
 
+							span.glyphicon.glyphicon-pencil
+							| Area Infomation
 
+							div.pull-right(style='margin-top:-1px')
+								button.btn.btn-xs.btn-primary(ng-click="func.divide(data.selectedIndex)", ng-disabled="data.selectedBox.boxes.length ? 'disabled' : false" , style='font-size:10px')		
+									| DIVIDE
 
+								button.btn.btn-xs.btn-default(ng-click='func.unselectBox()', style='font-size:10px')
+									| CLOSE
 
+						div.panel-body
 
-											div(ng-show='data.selectedBox.guideType == "outer"')
+							input.form-control.input-sm(type='text',
+								ng-model='data.selectedBox.name', style='margin-bottom:10px', placeholder='Name of this Area')
 
-												select.form-control(ng-model='data.selectedBox.outerType')
-													option(value='width') width
-													option(value='height') height
-													option(value='width x height') width x height
+							textarea.form-control.input-sm(rows='5', ng-model='data.selectedBox.desc', placeholder='Notes')
 
-												div(ng-show='data.selectedBox.outerType == "width"')
+						div.panel-heading(style='border-top:1px solid #ddd')
 
-													button.btn.btn-sm(ng-click='func.setGuideAlign("t")',
-														class="btn-{{data.selectedBox.guideAlignV == 't' ? 'success' : 'default'}}")
-														| 상단
-													button.btn.btn-sm(ng-click='func.setGuideAlign("b")',
-														class="btn-{{data.selectedBox.guideAlignV == 'b' ? 'success' : 'default'}}")
-														| 하단
+							span.glyphicon.glyphicon-resize-vertical
+							| Guide
 
-												div(ng-show='data.selectedBox.outerType == "height"')
+						div.panel-body
 
-													button.btn.btn-sm(ng-click='func.setGuideAlign("l")',
-														class="btn-{{data.selectedBox.guideAlignH == 'l' ? 'success' : 'default'}}")
-														| 좌
-													button.btn.btn-sm(ng-click='func.setGuideAlign("r")',
-														class="btn-{{data.selectedBox.guideAlignH == 'r' ? 'success' : 'default'}}")
-														| 우
+							div
 
-												div(ng-show='data.selectedBox.outerType == "width x height"')
+								div.btn-group
 
-													button.btn.btn-sm(ng-click='func.setGuideAlign("tl")',
-														class="btn-{{data.selectedBox.guideAlignV == 't' && data.selectedBox.guideAlignH == 'l' ? 'success' : 'default'}}")
-														| 좌상단
-													button.btn.btn-sm(ng-click='func.setGuideAlign("tr")',
-														class="btn-{{data.selectedBox.guideAlignV == 't' && data.selectedBox.guideAlignH == 'r' ? 'success' : 'default'}}")
-														| 우상단
-													button.btn.btn-sm(ng-click='func.setGuideAlign("br")',
-														class="btn-{{data.selectedBox.guideAlignV == 'b' && data.selectedBox.guideAlignH == 'r' ? 'success' : 'default'}}")
-														| 우하단
-													button.btn.btn-sm(ng-click='func.setGuideAlign("bl")',
-														class="btn-{{data.selectedBox.guideAlignV == 'b' && data.selectedBox.guideAlignH == 'l' ? 'success' : 'default'}}")
-														| 좌하단
+									button.btn.btn-xs(
+										ng-class='data.selectedBox.guideType == "outer" ? "btn-primary" : "btn-default"'
+										ng-click='func.setGuideType("outer")')
+										span.ico.ico-outer
 
-											div(ng-show='data.selectedBox.guideType == "gap"')
+									button.btn.btn-xs(
+										ng-class='data.selectedBox.guideType == "inner" ? "btn-primary" : "btn-default"'
+										ng-click='func.setGuideType("inner")')
+										span.ico.ico-inner
 
-												select.form-control(ng-model='data.selectedBox.gapType')
-													option(value='width') width
-													option(value='height') height
+									button.btn.btn-xs(
+										ng-class='data.selectedBox.guideType == "gap" ? "btn-primary" : "btn-default"'
+										ng-click='func.setGuideType("gap")')
+										span.ico.ico-gap
 
+								div(ng-show='data.selectedBox.guideType == "outer"')
 
-											input.form-control.input-sm(type='text',
-												ng-model='data.selectedBox.name')
+									select.form-control.input-sm(ng-model='data.selectedBox.outerType', style='margin-bottom:10px;margin-top:10px')
+										option(value='width') width
+										option(value='height') height
+										option(value='width x height') width x height
 
-											textarea.form-control.input-sm(rows='5', ng-model='data.selectedBox.desc')
+									div.btn-group(ng-show='data.selectedBox.outerType == "width"')
 
+										button.btn.btn-xs(ng-click='func.setGuideAlign("t")',
+											class="btn-{{data.selectedBox.guideAlignV == 't' ? 'primary' : 'default'}}")
+											span.ico-align.ico-t
 
+										button.btn.btn-xs(ng-click='func.setGuideAlign("b")',
+											class="btn-{{data.selectedBox.guideAlignV == 'b' ? 'primary' : 'default'}}")
+											span.ico-align.ico-b
+
+									div.btn-group(ng-show='data.selectedBox.outerType == "height"')
+
+										button.btn.btn-xs(ng-click='func.setGuideAlign("l")',
+											class="btn-{{data.selectedBox.guideAlignH == 'l' ? 'primary' : 'default'}}")
+											span.ico-align.ico-l
+
+										button.btn.btn-xs(ng-click='func.setGuideAlign("r")',
+											class="btn-{{data.selectedBox.guideAlignH == 'r' ? 'primary' : 'default'}}")
+											span.ico-align.ico-r
+
+									div.btn-group(ng-show='data.selectedBox.outerType == "width x height"')
+
+										button.btn.btn-xs(ng-click='func.setGuideAlign("tl")',
+											class="btn-{{data.selectedBox.guideAlignV == 't' && data.selectedBox.guideAlignH == 'l' ? 'primary' : 'default'}}")
+											span.ico-align.ico-tl
+
+										button.btn.btn-xs(ng-click='func.setGuideAlign("tr")',
+											class="btn-{{data.selectedBox.guideAlignV == 't' && data.selectedBox.guideAlignH == 'r' ? 'primary' : 'default'}}")
+											span.ico-align.ico-tr
+
+										button.btn.btn-xs(ng-click='func.setGuideAlign("bl")',
+											class="btn-{{data.selectedBox.guideAlignV == 'b' && data.selectedBox.guideAlignH == 'l' ? 'primary' : 'default'}}")
+											span.ico-align.ico-bl
+
+										button.btn.btn-xs(ng-click='func.setGuideAlign("br")',
+											class="btn-{{data.selectedBox.guideAlignV == 'b' && data.selectedBox.guideAlignH == 'r' ? 'primary' : 'default'}}")
+											span.ico-align.ico-br
+
+								div(ng-show='data.selectedBox.guideType == "gap"')
+
+									select.form-control.input-sm(ng-model='data.selectedBox.gapType', style='margin-top:10px')
+										option(value='width') width
+										option(value='height') height			
+
+						div.panel-heading(style='border-top:1px solid #ddd')
+
+							span.glyphicon.glyphicon-picture
+							| Area Preview & Color Picker (MOUSEOVER & CLICK)
+
+						div.panel-body
+	
+							div.color-picker(style='position:relative')
+								canvas(width='{{data.selectedBox._previewW}}',height='{{data.selectedBox._previewH}}',data-scaled, style='border:1px solid #ddd;display:block')
+
+								div.floating(style='position:absolute;top:-5px;left:-160px; width:150px;height:150px;border:5px solid #444;background-color:#fff')
+
+									canvas(class='magnify', width='140', height='140')
+
+									div(style='background-color:#444;color:#fff;font-weight:bold;position:absolute;top:-5px;right:-5px;padding:3px 10px;font-family:Consolas;font-size:14px')
+										| {{data.colorPicked}}
