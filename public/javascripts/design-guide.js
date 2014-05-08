@@ -62,7 +62,10 @@
                         ' style="top:' + each.y + 'px;left:' + each.x + 'px;width:' + each.w + 'px;height:' + each.h + 'px"> ');
 
                     if (each.desc) {
+                        html.push('<div class="comment-box"> ');
                         html.push('<span class="has-info glyphicon glyphicon-comment"></span> ');
+                        html.push('<div class="balloon"><pre>' + each.desc + '</pre></div> ');
+                        html.push('</div> ');
                     }
 
                     switch (each.guideType) {
@@ -186,7 +189,8 @@
         $scope.data = {
             _workName: null,
             _workId: null,
-            srcImg: '/images/design_home_sma.png',
+            srcImg: '/images/design_home_smb.png',
+            //srcImg: '/images/design_home.jpg',
             box: {},
             history: [],
             historyIndex: 0,
@@ -199,6 +203,21 @@
                 $location.search({workId: newValue}).replace();
             } else {
                 $location.search({}).replace();
+            }
+        });
+
+        $scope.$watch('data.selectedIndex ', function(newValue, oldValue) {
+
+            if (newValue) {
+                $timeout(function() {
+
+                    $(window).on('scroll.connectLine', function() {
+
+                        util.connectLine($('.panel-selected'), $('.area[data-box-index="' + newValue + '"]'));
+                    }).trigger('scroll.connectLine');
+                });    
+            } else {
+                $(window).off('scroll.connectLine');
             }
         });
 
