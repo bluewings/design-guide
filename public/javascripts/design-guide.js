@@ -153,9 +153,90 @@
             }
             return $sce.trustAsHtml(html.join(' '));
         };
+    }).filter('markupSkeleton', function ($filter, $sce) {
+
+        function hasNamedChild(box) {
+
+            var inx;
+
+            if (box.name) {
+                return true;
+            }
+            if (box.boxes) {
+                for (inx = 0; inx < box.boxes.length; inx++) {
+                    if (hasNamedChild(box.boxes[inx])) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        return function (box, html, indent, doNotClean) {
+
+            var each, display, inx, newHtml;
+
+            html = html ? html : [];
+            indent = indent ? indent : '';
+
+            if (box.boxes) {
+                for (inx = 0; inx < box.boxes.length; inx++) {
+                    each = box.boxes[inx];
+                    display = hasNamedChild(each);
+                    if (display) {
+                        if (each.name) {
+                            indent += '    ';
+                            html.push('');
+                            html.push(indent + '<!-- ' + each.name + ' -->');
+                            html.push(indent + '<div>');
+                            html.push(indent + '    <-- ');
+                            html.push(indent + '        name : ' + each.name);
+                            if (each.desc) {
+                                html.push(indent + '        desc : ' + each.desc.replace(/\n/gm, ' ').replace(/\s+/gm, ' '));
+                            }
+                            if (each.guideType == 'outer' && each.outerType == 'width') {
+                                html.push(indent + '        size (width) : ' + each.w);
+                            } else if (each.guideType == 'outer' && each.outerType == 'height') {
+                                html.push(indent + '        size (height) : ' + each.h);
+                            } else {
+                                html.push(indent + '        size : ' + each.w + ' x ' + each.h);
+                            }
+                            html.push(indent + '    -->');
+                        }
+
+                        if (each.boxes) {
+                            $filter('markupSkeleton')(each, html, indent, true);
+                        }
+                        if (each.name) {
+                            html.push(indent + '</div>');
+                            html.push(indent + '<!-- //' + each.name + ' -->');
+                            html.push('');
+                            indent = indent.replace(/^    /, '');
+                        }
+                    }
+                }
+            }
+
+            if (!doNotClean) {
+                newHtml = [];
+                for (inx = 0; inx < html.length; inx++) {
+                    html[inx] = html[inx].replace(/^    /, '');
+                    if (newHtml.length === 0 && $.trim(html[inx]) === '') {
+                        // skip - 첫줄에 공백인 경우 스킵
+                    } else if (newHtml.length > 0 && newHtml[newHtml.length - 1] === '' && $.trim(html[inx]) === '') {
+                        // skip - 두줄 연속 공백인 경우 스킵
+                    } else {
+                        newHtml.push(html[inx]);
+                    }
+                }
+                return newHtml.join('\n'); //.replace(/\</g, '&lt;').replace(/\>/g, '&gt;');    
+            } else {
+                return html.join('\n'); //.replace(/\</g, '&lt;').replace(/\>/g, '&gt;');    
+            }
+        };
     });
 
-    app.controller('MainCtrl', function ($scope, $element, $http, $timeout, $location, $modal) {
+    app.controller('MainCtrl', function ($scope, $element, $http, $timeout, $location, $filter, $modal) {
 
         var SUCCESS = 0;
 
@@ -171,7 +252,7 @@
             }
         };
         view.magnify.ctx = view.magnify.canvas.getContext('2d');
-        view.magnify.ctx.strokeStyle = 'red';        
+        view.magnify.ctx.strokeStyle = 'red';
 
         _tmp = {
             orgImgEl: null,
@@ -197,29 +278,39 @@
             panelWidth: 400
         };
 
-        $scope.$watch('data._workId', function(newValue, oldValue) {
+        $scope.$watch('data._workId', function (newValue, oldValue) {
 
             if (newValue) {
-                $location.search({workId: newValue}).replace();
+                $location.search({
+                    workId: newValue
+                }).replace();
             } else {
                 $location.search({}).replace();
             }
         });
 
-        $scope.$watch('data.selectedIndex ', function(newValue, oldValue) {
+        $scope.$watch('data.selectedIndex ', function (newValue, oldValue) {
 
             if (newValue) {
-                $timeout(function() {
+                $timeout(function () {
 
-                    $(window).on('scroll.connectLine', function() {
+                    $(window).on('scroll.connectLine resize.connectLine', function () {
 
                         util.connectLine($('.panel-selected'), $('.area[data-box-index="' + newValue + '"]'));
-                    }).trigger('scroll.connectLine');
-                });    
+                    }).trigger('scroll.connectLine resize.connectLine');
+                });
             } else {
-                $(window).off('scroll.connectLine');
+                $(window).off('scroll.connectLine resize.connectLine');
             }
         });
+
+        $scope.$watch('data.box', function(newValue, oldValue) {
+
+            if (newValue) {
+                $scope.data.markup = $filter('markupSkeleton')(newValue);
+            }
+
+        }, true);
 
         // select box
         $element.delegate('[data-box-index]', 'click', function (event) {
@@ -275,9 +366,10 @@
         // canvas color picker
         $element.delegate('canvas[data-scaled]', 'mousemove', function (event) {
 
-            var W = 7, H = 7;
+            var W = 7,
+                H = 7;
 
-            var imgData = event.target.getContext('2d').getImageData(event.offsetX - ((W - 1) / 2 ), event.offsetY - ((H - 1) / 2 ), W, H).data,
+            var imgData = event.target.getContext('2d').getImageData(event.offsetX - ((W - 1) / 2), event.offsetY - ((H - 1) / 2), W, H).data,
                 eW = parseInt(view.magnify.canvas.width / W, 10),
                 eH = parseInt(view.magnify.canvas.height / H, 10),
                 ynx, xnx, inx, rgb;
@@ -285,12 +377,12 @@
             for (ynx = 0; ynx < H; ynx++) {
                 for (xnx = 0; xnx < W; xnx++) {
                     inx = (ynx * W + xnx) * 4;
-                    rgb =  'rgb(' +imgData[inx] + ',' +imgData[inx + 1] + ',' +imgData[inx + 2] + ')';
+                    rgb = 'rgb(' + imgData[inx] + ',' + imgData[inx + 1] + ',' + imgData[inx + 2] + ')';
                     view.magnify.ctx.fillStyle = rgb;
                     view.magnify.ctx.fillRect(xnx * eW, ynx * eH, eW, eH);
-                }                
+                }
             }
-            view.magnify.ctx.rect(eW * ((W - 1) / 2) + 0.5, eH * ((H - 1 ) / 2) + 0.5, eW - 1, eH - 1);
+            view.magnify.ctx.rect(eW * ((W - 1) / 2) + 0.5, eH * ((H - 1) / 2) + 0.5, eW - 1, eH - 1);
             view.magnify.ctx.stroke();
 
             $scope.$root.safeApply(function () {
@@ -337,13 +429,13 @@
             },
 
             // 작업재용 삭제
-            remove: function() {
+            remove: function () {
 
                 if ($scope.data._workId) {
 
                     if (confirm('삭제하시겠습니가?')) {
 
-                        $http.delete('/work/' + $scope.data._workId).success(function() {
+                        $http.delete('/work/' + $scope.data._workId).success(function () {
 
                             $scope.func.clear();
                             $scope.data._workId = null;
@@ -381,7 +473,7 @@
                                 $http.post(url, {
                                     name: $scope.data.name,
                                     content: $scope.data.content
-                                }).success(function(data) {
+                                }).success(function (data) {
 
                                     if (data.code == 200) {
 
@@ -401,11 +493,11 @@
                         };
                     },
                     resolve: {
-                        workId: function() {
+                        workId: function () {
 
                             return globalScope.data._workId;
                         },
-                        name: function() {
+                        name: function () {
 
                             return globalScope.data._workName;
                         },
@@ -421,17 +513,17 @@
                     }
                 });
 
-                modalInstance.result.then(function(info) {
+                modalInstance.result.then(function (info) {
 
                     if (info && info.workId) {
                         globalScope.data._workName = info.workName ? info.workName : 'noname';
                         globalScope.data._workId = info.workId;
-                    }                    
+                    }
                 });
             },
 
             // 저장된 항목 불러오기
-            browse: function() {
+            browse: function () {
 
                 var modalInstance;
 
@@ -444,8 +536,8 @@
                         };
 
                         $scope.func = {
-                            load: function(file) {
-                                $http.get('/work/' + file.workId).success(function(data) {
+                            load: function (file) {
+                                $http.get('/work/' + file.workId).success(function (data) {
 
                                     if (data.code == 200) {
                                         globalScope.func.load(data.result.content, file.workId, file.filename);
@@ -453,13 +545,13 @@
                                     } else {
                                         alert(data.message);
                                     }
-                                });                                
+                                });
                             },
                             cancel: function () {
                                 $modalInstance.dismiss('cancel');
                             }
                         };
-                        $http.get('/work').success(function(data) {
+                        $http.get('/work').success(function (data) {
 
                             if (data.code == 200) {
                                 $scope.data.files = data.result.files;
@@ -655,7 +747,7 @@
 
         // 최초 인입시 파라미터값 확인 (작업ID 가 있으면 로드)
         if (search && search.workId) {
-            $http.get('/work/' + search.workId).success(function(data) {
+            $http.get('/work/' + search.workId).success(function (data) {
 
                 if (data.code == 200) {
                     $scope.func.load(data.result.content, search.workId, data.result.filename);

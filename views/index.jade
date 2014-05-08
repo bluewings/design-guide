@@ -64,7 +64,7 @@ block content
 
 		div.main-content
 
-			div.container
+			div.container		
 
 				div.pane(style='width:200px;height:1px')
 
@@ -103,123 +103,133 @@ block content
 								div.easel(style='margin-top:50px')
 									img(ng-src="{{data.srcImg}}")
 									div(ng-bind-html="data.box | layerBox")
-
-
-
 					
 				div.pane.pane-selected(style='width:10px;height:10px')
 
-					div.panel.panel-default.panel-selected(ng-show='data.selectedBox',style='width:{{data.panelWidth + 24}}px;box-sizing:border-box;position:fixed')
+					div(style='position:fixed')
 
-						div.panel-heading
+						div.panel.panel-default.panel-selected(ng-show='data.selectedBox',style='width:{{data.panelWidth + 24}}px;box-sizing:border-box')
 
-							span.glyphicon.glyphicon-pencil
-							| Area Infomation
+							div.panel-heading
 
-							div.pull-right(style='margin-top:-1px')
-								button.btn.btn-xs.btn-primary(ng-click="func.divide(data.selectedIndex)", ng-disabled="data.selectedBox.boxes.length ? 'disabled' : false" , style='font-size:10px')
-									| DIVIDE
+								span.glyphicon.glyphicon-pencil
+								| Area Infomation
 
-								button.btn.btn-xs.btn-default(ng-click='func.unselectBox()', style='font-size:10px')
-									| CLOSE
+								div.pull-right(style='margin-top:-1px')
+									button.btn.btn-xs.btn-primary(ng-click="func.divide(data.selectedIndex)", ng-disabled="data.selectedBox.boxes.length ? 'disabled' : false" , style='font-size:10px')
+										| DIVIDE
 
-						div.panel-body
+									button.btn.btn-xs.btn-default(ng-click='func.unselectBox()', style='font-size:10px')
+										| CLOSE
 
-							input.form-control.input-sm(type='text',
-								ng-model='data.selectedBox.name', style='margin-bottom:10px', placeholder='Name of this Area')
+							div.panel-body
 
-							textarea.form-control.input-sm(rows='5', ng-model='data.selectedBox.desc', placeholder='Notes')
+								input.form-control.input-sm(type='text',
+									ng-model='data.selectedBox.name', style='margin-bottom:10px', placeholder='Name of this Area')
 
-						div.panel-heading(style='border-top:1px solid #ddd')
+								textarea.form-control.input-sm(rows='5', ng-model='data.selectedBox.desc', placeholder='Notes')
 
-							span.glyphicon.glyphicon-resize-vertical
-							| Guide
+							div.panel-heading(style='border-top:1px solid #ddd')
 
-						div.panel-body
+								span.glyphicon.glyphicon-resize-vertical
+								| Guide
 
-							div
+							div.panel-body
 
-								div.btn-group
+								div
 
-									button.btn.btn-xs(
-										ng-class='data.selectedBox.guideType == "outer" ? "btn-primary" : "btn-default"'
-										ng-click='func.setGuideType("outer")')
-										span.ico.ico-outer
+									div.btn-group
 
-									button.btn.btn-xs(
-										ng-class='data.selectedBox.guideType == "inner" ? "btn-primary" : "btn-default"'
-										ng-click='func.setGuideType("inner")')
-										span.ico.ico-inner
+										button.btn.btn-xs(
+											ng-class='data.selectedBox.guideType == "outer" ? "btn-primary" : "btn-default"'
+											ng-click='func.setGuideType("outer")')
+											span.ico.ico-outer
 
-									button.btn.btn-xs(
-										ng-class='data.selectedBox.guideType == "gap" ? "btn-primary" : "btn-default"'
-										ng-click='func.setGuideType("gap")')
-										span.ico.ico-gap
+										button.btn.btn-xs(
+											ng-class='data.selectedBox.guideType == "inner" ? "btn-primary" : "btn-default"'
+											ng-click='func.setGuideType("inner")')
+											span.ico.ico-inner
 
-								div(ng-show='data.selectedBox.guideType == "outer"')
+										button.btn.btn-xs(
+											ng-class='data.selectedBox.guideType == "gap" ? "btn-primary" : "btn-default"'
+											ng-click='func.setGuideType("gap")')
+											span.ico.ico-gap
 
-									select.form-control.input-sm(ng-model='data.selectedBox.outerType', style='margin-bottom:10px;margin-top:10px')
-										option(value='width') width
-										option(value='height') height
-										option(value='width x height') width x height
+									div(ng-show='data.selectedBox.guideType == "outer"')
 
-									div.btn-group(ng-show='data.selectedBox.outerType == "width"')
+										select.form-control.input-sm(ng-model='data.selectedBox.outerType', style='margin-bottom:10px;margin-top:10px')
+											option(value='width') width
+											option(value='height') height
+											option(value='width x height') width x height
 
-										button.btn.btn-xs(ng-click='func.setGuideAlign("t")',
-											class="btn-{{data.selectedBox.guideAlignV == 't' ? 'primary' : 'default'}}")
-											span.ico-align.ico-t
+										div.btn-group(ng-show='data.selectedBox.outerType == "width"')
 
-										button.btn.btn-xs(ng-click='func.setGuideAlign("b")',
-											class="btn-{{data.selectedBox.guideAlignV == 'b' ? 'primary' : 'default'}}")
-											span.ico-align.ico-b
+											button.btn.btn-xs(ng-click='func.setGuideAlign("t")',
+												class="btn-{{data.selectedBox.guideAlignV == 't' ? 'primary' : 'default'}}")
+												span.ico-align.ico-t
 
-									div.btn-group(ng-show='data.selectedBox.outerType == "height"')
+											button.btn.btn-xs(ng-click='func.setGuideAlign("b")',
+												class="btn-{{data.selectedBox.guideAlignV == 'b' ? 'primary' : 'default'}}")
+												span.ico-align.ico-b
 
-										button.btn.btn-xs(ng-click='func.setGuideAlign("l")',
-											class="btn-{{data.selectedBox.guideAlignH == 'l' ? 'primary' : 'default'}}")
-											span.ico-align.ico-l
+										div.btn-group(ng-show='data.selectedBox.outerType == "height"')
 
-										button.btn.btn-xs(ng-click='func.setGuideAlign("r")',
-											class="btn-{{data.selectedBox.guideAlignH == 'r' ? 'primary' : 'default'}}")
-											span.ico-align.ico-r
+											button.btn.btn-xs(ng-click='func.setGuideAlign("l")',
+												class="btn-{{data.selectedBox.guideAlignH == 'l' ? 'primary' : 'default'}}")
+												span.ico-align.ico-l
 
-									div.btn-group(ng-show='data.selectedBox.outerType == "width x height"')
+											button.btn.btn-xs(ng-click='func.setGuideAlign("r")',
+												class="btn-{{data.selectedBox.guideAlignH == 'r' ? 'primary' : 'default'}}")
+												span.ico-align.ico-r
 
-										button.btn.btn-xs(ng-click='func.setGuideAlign("tl")',
-											class="btn-{{data.selectedBox.guideAlignV == 't' && data.selectedBox.guideAlignH == 'l' ? 'primary' : 'default'}}")
-											span.ico-align.ico-tl
+										div.btn-group(ng-show='data.selectedBox.outerType == "width x height"')
 
-										button.btn.btn-xs(ng-click='func.setGuideAlign("tr")',
-											class="btn-{{data.selectedBox.guideAlignV == 't' && data.selectedBox.guideAlignH == 'r' ? 'primary' : 'default'}}")
-											span.ico-align.ico-tr
+											button.btn.btn-xs(ng-click='func.setGuideAlign("tl")',
+												class="btn-{{data.selectedBox.guideAlignV == 't' && data.selectedBox.guideAlignH == 'l' ? 'primary' : 'default'}}")
+												span.ico-align.ico-tl
 
-										button.btn.btn-xs(ng-click='func.setGuideAlign("bl")',
-											class="btn-{{data.selectedBox.guideAlignV == 'b' && data.selectedBox.guideAlignH == 'l' ? 'primary' : 'default'}}")
-											span.ico-align.ico-bl
+											button.btn.btn-xs(ng-click='func.setGuideAlign("tr")',
+												class="btn-{{data.selectedBox.guideAlignV == 't' && data.selectedBox.guideAlignH == 'r' ? 'primary' : 'default'}}")
+												span.ico-align.ico-tr
 
-										button.btn.btn-xs(ng-click='func.setGuideAlign("br")',
-											class="btn-{{data.selectedBox.guideAlignV == 'b' && data.selectedBox.guideAlignH == 'r' ? 'primary' : 'default'}}")
-											span.ico-align.ico-br
+											button.btn.btn-xs(ng-click='func.setGuideAlign("bl")',
+												class="btn-{{data.selectedBox.guideAlignV == 'b' && data.selectedBox.guideAlignH == 'l' ? 'primary' : 'default'}}")
+												span.ico-align.ico-bl
 
-								div(ng-show='data.selectedBox.guideType == "gap"')
+											button.btn.btn-xs(ng-click='func.setGuideAlign("br")',
+												class="btn-{{data.selectedBox.guideAlignV == 'b' && data.selectedBox.guideAlignH == 'r' ? 'primary' : 'default'}}")
+												span.ico-align.ico-br
 
-									select.form-control.input-sm(ng-model='data.selectedBox.gapType', style='margin-top:10px')
-										option(value='width') width
-										option(value='height') height
+									div(ng-show='data.selectedBox.guideType == "gap"')
 
-						div.panel-heading(style='border-top:1px solid #ddd')
+										select.form-control.input-sm(ng-model='data.selectedBox.gapType', style='margin-top:10px')
+											option(value='width') width
+											option(value='height') height
 
-							span.glyphicon.glyphicon-picture
-							| Area Preview & Color Picker (MOUSEOVER & CLICK)
+							div.panel-heading(style='border-top:1px solid #ddd')
 
-						div.panel-body
+								span.glyphicon.glyphicon-picture
+								| Area Preview & Color Picker (MOUSEOVER & CLICK)
 
-							div.color-picker(style='position:relative')
-								canvas(width='{{data.selectedBox._previewW}}',height='{{data.selectedBox._previewH}}',data-scaled, style='border:1px solid #ddd;display:block')
+							div.panel-body
 
-								div.floating(style='position:absolute;top:-5px;left:-160px; width:150px;height:150px;border:5px solid #444;background-color:#fff')
+								div.color-picker(style='position:relative')
+									canvas(width='{{data.selectedBox._previewW}}',height='{{data.selectedBox._previewH}}',data-scaled, style='border:1px solid #ddd;display:block')
 
-									canvas(class='magnify', width='140', height='140')
+									div.floating(style='position:absolute;top:-5px;left:-160px; width:150px;height:150px;border:5px solid #444;background-color:#fff')
 
-									div(style='background-color:#444;color:#fff;font-weight:bold;position:absolute;top:-5px;right:-5px;padding:3px 10px;font-family:Consolas;font-size:14px')
-										| {{data.colorPicked}}
+										canvas(class='magnify', width='140', height='140')
+
+										div(style='background-color:#444;color:#fff;font-weight:bold;position:absolute;top:-5px;right:-5px;padding:3px 10px;font-family:Consolas;font-size:14px')
+											| {{data.colorPicked}}
+
+						div.panel.panel-default(style='width:{{data.panelWidth + 24}}px;box-sizing:border-box')
+
+							div.panel-heading
+
+								span.glyphicon.glyphicon-flash
+								| Skeleton Markup
+
+							div.panel-body
+
+								textarea.form-control.input-sm(ng-model="data.markup", rows='{{data.selectedBox ? 10 : 40}}', style='font-family:Consolas, Courier New')
