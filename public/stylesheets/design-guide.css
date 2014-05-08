@@ -398,6 +398,9 @@ span.ico-align {
     .layer-tree .list-group .list-group-item {
       padding: 10px 0 0 15px;
       border: none; }
+  .layer-tree .glyphicon {
+    color: #777;
+    top: 2px; }
 
 .hove2 {
   background-color: rgba(0, 255, 0, 0.1); }

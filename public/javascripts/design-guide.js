@@ -142,6 +142,12 @@
                         html.push('<li class="list-group-item" data-box-index="' + prefix + inx + '"> ');
                         html.push('<div class="' + (each.selected ? 'selected' : '') + '"> ');
                         html.push(each.name ? each.name : 'item ' + inx);
+                        if (each.guideType) {
+                            html.push('<span class="glyphicon glyphicon-resize-vertical"></span>');
+                        }
+                        if (each.desc) {
+                            html.push('<span class="glyphicon glyphicon-comment"></span>');
+                        }
                         html.push('</div> ');
                         if (each.boxes) {
                             $filter('layerTree')(each, confOnly, html, prefix + inx + ',');

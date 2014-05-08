@@ -164,35 +164,31 @@ span.ico-align {
     }
 }
 
-
-
 .comment-box {
     .balloon {
-    pointer-events:none;
-    opacity:0;
-    position:absolute;
-    display:block;
-    top:25px;
-    z-index:1000;
-    -webkit-transition: opacity 0.35s;
+        pointer-events: none;
+        opacity: 0;
+        position: absolute;
+        display: block;
+        top: 25px;
+        z-index: 1000;
+        -webkit-transition: opacity 0.35s;
         transition: opacity 0.35s;
-    pre {
-        background-color:#4c505c;
-        border-radius:5px;
-        width:auto;
-        color:#fff;
-        font-weight:bold;
-        padding:10px 15px;
-        min-width:200px;
+        pre {
+            background-color: #4c505c;
+            border-radius: 5px;
+            width: auto;
+            color: #fff;
+            font-weight: bold;
+            padding: 10px 15px;
+            min-width: 200px;
+        }
     }
-}
     &:hover {
         .balloon {
-            opacity:1;
+            opacity: 1;
+        }
     }
-    }
-    
-
 }
 
 .pane-selected {
@@ -547,6 +543,10 @@ span.ico-align {
             border: none;
         }
         margin-bottom: 0;
+    }
+    .glyphicon {
+        color: #777;
+        top: 2px;
     }
 }
 
