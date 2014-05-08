@@ -161,8 +161,6 @@
         view = {
             uploadForm: $element.find('form'),
             inputFile: $element.find('input:file'),
-            //canvas: $element.find('canvas').get(0),
-            //ctx: null,
             magnify: {
                 canvas: $element.find('canvas.magnify').get(0),
                 ctx: null
@@ -190,24 +188,16 @@
             _workName: null,
             _workId: null,
             srcImg: '/images/design_home_sma.png',
-            /*canvas: {
-                imgSrc: null,
-                width: null,
-                height: null
-            },
-            regions: [],*/
             box: {},
-            //jobType: 'divide',
             history: [],
             historyIndex: 0,
-            panelWidth: 260,
-
+            panelWidth: 260
         };
 
         // select box
         $element.delegate('[data-box-index]', 'click', function (event) {
 
-            $scope.$apply(function () {
+            $scope.$root.safeApply(function () {
 
                 $scope.func.selectBox($(event.currentTarget).attr('data-box-index'));
             });
@@ -243,7 +233,7 @@
                 range = getIndexRange(_drag.frIndex_, $(event.currentTarget).attr('data-box-index'));
                 if (range) {
                     mergedIndex = merge(range);
-                    $scope.$apply(function () {
+                    $scope.$root.safeApply(function () {
                         $scope.func.selectBox(mergedIndex);
                     });
                 }
@@ -276,7 +266,7 @@
             view.magnify.ctx.rect(eW * ((W - 1) / 2) + 0.5, eH * ((H - 1 ) / 2) + 0.5, eW - 1, eH - 1);
             view.magnify.ctx.stroke();
 
-            $scope.$apply(function () {
+            $scope.$root.safeApply(function () {
 
                 var r, g, b;
                 imgData = event.target.getContext('2d').getImageData(event.offsetX, event.offsetY, 1, 1).data;
@@ -291,14 +281,14 @@
 
         }).delegate('canvas[data-scaled]', 'mouseout', function (event) {
 
-            $scope.$apply(function () {
+            $scope.$root.safeApply(function () {
                 delete $scope.data.colorPicked;
             });
 
         }).delegate('canvas[data-scaled]', 'click', function (event) {
 
             if ($scope.data.selectedBox && $scope.data.colorPicked) {
-                $scope.$apply(function () {
+                $scope.$root.safeApply(function () {
                     $scope.data.selectedBox.desc = $.trim($scope.data.selectedBox.desc) + ' ' + $scope.data.colorPicked;
                 });
             }
@@ -429,8 +419,6 @@
                         $scope.func = {
                             load: function(file) {
                                 $http.get('/work/' + file.workId).success(function(data) {
-
-                                    console.log(file);
 
                                     if (data.code == 200) {
                                         globalScope.func.load(data.result.content, file.workId, file.filename);
@@ -623,7 +611,7 @@
                     imgEl = _tmp.edgeImgEl;
 
                     if (!$scope.data.box || !$scope.data.box.boxes || $scope.data.box.boxes.length === 0) {
-                        $scope.$apply(function () {
+                        $scope.$root.safeApply(function () {
                             $scope.data.box = {
                                 x: 0,
                                 y: 0,
@@ -659,7 +647,7 @@
 
             var box, target = getBoxByIndex(range.from.prefix);
 
-            $scope.$apply(function () {
+            $scope.$root.safeApply(function () {
 
                 box = target.boxes[range.from.value];
                 box.w = target.boxes[range.to.value].x + target.boxes[range.to.value].w - box.x;

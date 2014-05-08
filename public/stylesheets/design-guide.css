@@ -1,11 +1,12 @@
 @import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css);
+/*$default-bg-color: #4c505c;*/
 html {
   overflow-y: scroll; }
 
 body {
   padding: 0 !important;
   margin: 0;
-  background-color: #4c505c;
+  background-color: white;
   word-break: break-all;
   font-family: Nanum Gothic,AppleGothic,sans-serif;
   font-size: 12px; }
@@ -26,20 +27,40 @@ body {
       color: #fff !important; }
     .navbar.navbar-fixed-top .navbar-nav > li > a {
       padding: 5px 6px; }
-    .navbar.navbar-fixed-top input {
-      font-size: 18px;
-      font-weight: bold;
-      padding: 0 5px 2px;
-      line-height: 0;
-      height: 22px;
-      text-align: center;
-      width: 170px;
-      margin-top: 6px;
-      margin-bottom: 6px;
-      color: #777; }
+    .navbar.navbar-fixed-top .btn-area {
+      /*padding: 6px 10px 3px;*/
+      font-size: 16px !important;
+      float: left; }
+      .navbar.navbar-fixed-top .btn-area > a {
+        color: #777;
+        text-decoration: none;
+        cursor: pointer;
+        display: inline-block;
+        padding: 10px 8px 1px 16px;
+        border-right: 1px dotted gray;
+        vertical-align: bottom !important; }
+        .navbar.navbar-fixed-top .btn-area > a .glyphicon {
+          top: -2px; }
+        .navbar.navbar-fixed-top .btn-area > a .txt {
+          font-size: 12px !important;
+          padding-left: 8px;
+          display: inline-block;
+          width: 0;
+          white-space: nowrap;
+          overflow: hidden;
+          -webkit-transition: all 0.5s; }
+        .navbar.navbar-fixed-top .btn-area > a:hover span.txt {
+          width: 60px; }
 
 .main-content {
   margin-top: 45px; }
+  .main-content .pane {
+    float: left;
+    background-color: yellow;
+    margin-right: 10px; }
+  .main-content .easel {
+    margin: 30px;
+    position: relative; }
   .main-content .hide-rect .area {
     border: none; }
   .main-content .area {

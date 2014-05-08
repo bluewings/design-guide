@@ -1,186 +1,201 @@
 extends layout
 
 block content
-	nav.navbar.navbar-default.navbar-fixed-top(role='navigation')
-		.container
-			.navbar-header
-				strong.navbar-brand
-					| Design Guide Helper v0.1
 
-	div.main-content(ng-app='design-guide')
-		div(ng-controller='MainCtrl')
-			//
-				div.rows.container(style='background-color:rgba(0,255,255,0.3)')
+	div(ng-app='design-guide', ng-controller='MainCtrl')
+		nav.navbar.navbar-default.navbar-fixed-top(role='navigation')
+			.container
+				.navbar-header
+					strong.navbar-brand
+						| Design Guide Helper v0.1
 
-			div.rows.container
 
-				div.col.col-md-4.aside
 
-					div
-						| {{data.history.length}}
-					//		
-						form(action="/upload", method="post", enctype="multipart/form-data")
-							input(type="file", name="imageFile")
 
-					button.btn.btn-sm.btn-default(ng-click='func.save()')
-						span.glyphicon.glyphicon-floppy-open
 
-					button.btn.btn-sm.btn-default(ng-click='func.clear()')
-						span.glyphicon.glyphicon-remove-circle
+				div.btn-area(style='border-left:1px solid silver;margin-left:5px')
 
-					button.btn.btn-sm.btn-default(ng-click='func.browse()')
+					a(ng-click='func.browse()')
 						span.glyphicon.glyphicon-folder-open
+						span.txt
+							| Open...
 
-					button.btn.btn-sm.btn-default(ng-show='data._workId', ng-click='func.remove()')
-						| 지우자
+				ul.nav.navbar-nav.target-list
+					li.dropdown
+						a.dropdown-toggle(href='', style='background-color:#669acc', data-toggle='dropdown')
+							| {{data.selectedTarget.name}}noname 한글테스트
+							b.caret
+						ul.dropdown-menu
+							li(mg-repeat='target in data.targets')
+								a(ng-click='data.selectedTarget = target', href='') {{target.name}}
 
-					label
-						input(type='checkbox',
-							ng-model='data.showConfiguredOnly')
-						| 설정이 존재하는 노드만 표시합니다.
 
-					//
-						div.btn-group
-							button.btn.btn-sm.btn-default
-								span.glyphicon.glyphicon-flash
-							button.btn.btn-sm.btn-default
-								span.glyphicon.glyphicon-resize-horizontal
-							button.btn.btn-sm.btn-default
-								span.glyphicon.glyphicon-resize-vertical
-								span.glyphicon.glyphicon-trash
+				div.btn-area
 
-					div.layer-tree(ng-bind-html="data.box | layerTree : data.showConfiguredOnly")
+					a(ng-click='func.save()')
+						span.glyphicon.glyphicon-floppy-disk
+						span.txt
+							| Save As..
 
-					div.panel.panel-default(ng-show='data.selectedBox'
-						style='position:absolute;width:300px;top:{{data.selectedBox.y}}px;right:0'
-						)
+					
+
+					a(ng-show='data._workId', ng-click='func.remove()')
+						span.glyphicon.glyphicon-trash
+						span.txt
+							| Delete
+
+					a(ng-click='func.clear()')
+						span.glyphicon.glyphicon-remove
+						span.txt
+							| Clear
+
+
+						
+
+
+
+
+
+		div.main-content
+
+			div.container
+			
+				div.pane(style='width:200px')
+
+					div.panel.panel-default
+
+						div.panel-heading
+							| tree node
+
 						div.panel-body
-							button.btn.btn-sm.btn-default(
-								ng-click="func.divide(data.selectedIndex)"
-								ng-disabled="data.selectedBox.boxes.length ? 'disabled' : false")
-								span.glyphicon.glyphicon-th-large
 
-							button.btn.btn-sm(
-								ng-class='data.selectedBox.guideType == "outer" ? "btn-primary" : ""'
-								ng-click='func.setGuideType("outer")')
-								span.glyphicon.glyphicon-th-large
-								| 테두리표시
-							button.btn.btn-sm(
-								ng-class="data.selectedBox.guideType == 'inner' ? 'btn-primary' : ''"
-								ng-click="func.setGuideType('inner')")
-								span.glyphicon.glyphicon-th-large
-								| 내부표시
-							button.btn.btn-sm(
-								ng-class="data.selectedBox.guideType == 'gap' ? 'btn-primary' : ''"
-								ng-click="func.setGuideType('gap')")
-								span.glyphicon.glyphicon-th-large
-								| 간격표시
+							label
+								input(type='checkbox', ng-model='data.showConfiguredOnly')
+								| 설정이 존재하는 노드만 표시합니다.
 
-							button.btn.btn-sm(
-								ng-click='func.unselectBox()'
-							)
-								| 닫기
+							div.layer-tree(ng-bind-html="data.box | layerTree : data.showConfiguredOnly")
 
-							br
+				div.pane(style='min-width:600px')
 
-							br
+					div.panel.panel-default
 
-	
+						div.panel-body(style='background-color:#4c505c')
 
-							canvas(width='{{data.selectedBox._previewW}}',height='{{data.selectedBox._previewH}}',data-scaled)
+							label
+								input(type='checkbox', ng-model='data.hideRect')
+								| 영역표시를 숨깁니다.
 
-							canvas(class='magnify', width='100', height='100')
-
-							
-
-							{{data.colorPicked}}
+							div(style='position:relative', class='{{data.hideRect ? "hide-rect" : ""}}')
+								div.easel
+									img(ng-src="{{data.srcImg}}")
+									div(ng-bind-html="data.box | layerBox")							
 
 
+									div.panel.panel-default(ng-show='data.selectedBox'
+										style='position:absolute;width:300px;top:{{data.selectedBox.y}}px;right:-355px'
+										)
+										div.panel-body
+											button.btn.btn-sm.btn-default(
+												ng-click="func.divide(data.selectedIndex)"
+												ng-disabled="data.selectedBox.boxes.length ? 'disabled' : false")
+												span.glyphicon.glyphicon-th-large
 
-							br
-							br
+											button.btn.btn-sm(
+												ng-class='data.selectedBox.guideType == "outer" ? "btn-primary" : ""'
+												ng-click='func.setGuideType("outer")')
+												span.glyphicon.glyphicon-th-large
+												| 테두리표시
+											button.btn.btn-sm(
+												ng-class="data.selectedBox.guideType == 'inner' ? 'btn-primary' : ''"
+												ng-click="func.setGuideType('inner')")
+												span.glyphicon.glyphicon-th-large
+												| 내부표시
+											button.btn.btn-sm(
+												ng-class="data.selectedBox.guideType == 'gap' ? 'btn-primary' : ''"
+												ng-click="func.setGuideType('gap')")
+												span.glyphicon.glyphicon-th-large
+												| 간격표시
 
+											button.btn.btn-sm(
+												ng-click='func.unselectBox()'
+											)
+												| 닫기
 
+											br
 
+											br
 
+					
 
+											canvas(width='{{data.selectedBox._previewW}}',height='{{data.selectedBox._previewH}}',data-scaled)
 
+											canvas(class='magnify', width='100', height='100')
 
-							div(ng-show='data.selectedBox.guideType == "outer"')
+											
 
-								select.form-control(ng-model='data.selectedBox.outerType')
-									option(value='width') width
-									option(value='height') height
-									option(value='width x height') width x height
-
-								div(ng-show='data.selectedBox.outerType == "width"')
-
-									button.btn.btn-sm(ng-click='func.setGuideAlign("t")',
-										class="btn-{{data.selectedBox.guideAlignV == 't' ? 'success' : 'default'}}")
-										| 상단
-									button.btn.btn-sm(ng-click='func.setGuideAlign("b")',
-										class="btn-{{data.selectedBox.guideAlignV == 'b' ? 'success' : 'default'}}")
-										| 하단
-
-								div(ng-show='data.selectedBox.outerType == "height"')
-
-									button.btn.btn-sm(ng-click='func.setGuideAlign("l")',
-										class="btn-{{data.selectedBox.guideAlignH == 'l' ? 'success' : 'default'}}")
-										| 좌
-									button.btn.btn-sm(ng-click='func.setGuideAlign("r")',
-										class="btn-{{data.selectedBox.guideAlignH == 'r' ? 'success' : 'default'}}")
-										| 우
-
-								div(ng-show='data.selectedBox.outerType == "width x height"')
-
-									button.btn.btn-sm(ng-click='func.setGuideAlign("tl")',
-										class="btn-{{data.selectedBox.guideAlignV == 't' && data.selectedBox.guideAlignH == 'l' ? 'success' : 'default'}}")
-										| 좌상단
-									button.btn.btn-sm(ng-click='func.setGuideAlign("tr")',
-										class="btn-{{data.selectedBox.guideAlignV == 't' && data.selectedBox.guideAlignH == 'r' ? 'success' : 'default'}}")
-										| 우상단
-									button.btn.btn-sm(ng-click='func.setGuideAlign("br")',
-										class="btn-{{data.selectedBox.guideAlignV == 'b' && data.selectedBox.guideAlignH == 'r' ? 'success' : 'default'}}")
-										| 우하단
-									button.btn.btn-sm(ng-click='func.setGuideAlign("bl")',
-										class="btn-{{data.selectedBox.guideAlignV == 'b' && data.selectedBox.guideAlignH == 'l' ? 'success' : 'default'}}")
-										| 좌하단
-
-							div(ng-show='data.selectedBox.guideType == "gap"')
-
-								select.form-control(ng-model='data.selectedBox.gapType')
-									option(value='width') width
-									option(value='height') height
+											{{data.colorPicked}}
 
 
-							input.form-control.input-sm(type='text',
-								ng-model='data.selectedBox.name')
 
-							textarea.form-control.input-sm(rows='5', ng-model='data.selectedBox.desc')
-
-							div
-
-							//
-								pre
-									| {{data.selectedBox | json}}
-
-				div.col.col-md-8
-
-					label
-						input(type='checkbox', ng-model='data.hideRect')
-						| 영역표시를 숨깁니다.
-
-					div(style='position:relative',
-						class='{{data.hideRect ? "hide-rect" : ""}}')
-						img(ng-src="{{data.srcImg}}")
-						div(ng-bind-html="data.box | layerBox")
+											br
+											br
 
 
-					//
-						canvas(ng-attr-width='{{data.canvas.width}}',ng-attr-height='{{data.canvas.height}}', width='640')
 
-						pre
-							| {{data.canvas | json}}
 
+
+
+
+											div(ng-show='data.selectedBox.guideType == "outer"')
+
+												select.form-control(ng-model='data.selectedBox.outerType')
+													option(value='width') width
+													option(value='height') height
+													option(value='width x height') width x height
+
+												div(ng-show='data.selectedBox.outerType == "width"')
+
+													button.btn.btn-sm(ng-click='func.setGuideAlign("t")',
+														class="btn-{{data.selectedBox.guideAlignV == 't' ? 'success' : 'default'}}")
+														| 상단
+													button.btn.btn-sm(ng-click='func.setGuideAlign("b")',
+														class="btn-{{data.selectedBox.guideAlignV == 'b' ? 'success' : 'default'}}")
+														| 하단
+
+												div(ng-show='data.selectedBox.outerType == "height"')
+
+													button.btn.btn-sm(ng-click='func.setGuideAlign("l")',
+														class="btn-{{data.selectedBox.guideAlignH == 'l' ? 'success' : 'default'}}")
+														| 좌
+													button.btn.btn-sm(ng-click='func.setGuideAlign("r")',
+														class="btn-{{data.selectedBox.guideAlignH == 'r' ? 'success' : 'default'}}")
+														| 우
+
+												div(ng-show='data.selectedBox.outerType == "width x height"')
+
+													button.btn.btn-sm(ng-click='func.setGuideAlign("tl")',
+														class="btn-{{data.selectedBox.guideAlignV == 't' && data.selectedBox.guideAlignH == 'l' ? 'success' : 'default'}}")
+														| 좌상단
+													button.btn.btn-sm(ng-click='func.setGuideAlign("tr")',
+														class="btn-{{data.selectedBox.guideAlignV == 't' && data.selectedBox.guideAlignH == 'r' ? 'success' : 'default'}}")
+														| 우상단
+													button.btn.btn-sm(ng-click='func.setGuideAlign("br")',
+														class="btn-{{data.selectedBox.guideAlignV == 'b' && data.selectedBox.guideAlignH == 'r' ? 'success' : 'default'}}")
+														| 우하단
+													button.btn.btn-sm(ng-click='func.setGuideAlign("bl")',
+														class="btn-{{data.selectedBox.guideAlignV == 'b' && data.selectedBox.guideAlignH == 'l' ? 'success' : 'default'}}")
+														| 좌하단
+
+											div(ng-show='data.selectedBox.guideType == "gap"')
+
+												select.form-control(ng-model='data.selectedBox.gapType')
+													option(value='width') width
+													option(value='height') height
+
+
+											input.form-control.input-sm(type='text',
+												ng-model='data.selectedBox.name')
+
+											textarea.form-control.input-sm(rows='5', ng-model='data.selectedBox.desc')
 
 

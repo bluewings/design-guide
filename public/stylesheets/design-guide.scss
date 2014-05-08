@@ -1,5 +1,7 @@
 $default-font-size: 12px;
-$default-bg-color: #4c505c;
+
+/*$default-bg-color: #4c505c;*/
+$default-bg-color: white;
 
 $header-font: Play;
 $preview-width: 768px;
@@ -55,23 +57,51 @@ body {
                 }
             }
         }
-        input {
-            font-size: 18px;
-            font-weight: bold;
-            padding: 0 5px 2px;
-            line-height: 0;
-            height: 22px;
-            text-align: center;
-            width: 170px;
-            margin-top: 6px;
-            margin-bottom: 6px;
-            color: #777;
+        .btn-area {
+            /*padding: 6px 10px 3px;*/
+            font-size: 16px !important;
+            float: left;
+            > a {
+                color: #777;
+                text-decoration: none;
+                cursor: pointer;
+                display: inline-block;
+                padding: 10px 8px 1px 16px;
+                border-right: 1px dotted gray;
+                vertical-align: bottom !important;
+                .glyphicon {
+                    top: -2px;
+                }
+                .txt {
+                    font-size: 12px !important;
+                    padding-left: 8px;
+                    display: inline-block;
+                    width: 0;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    -webkit-transition: all 0.5s;
+                }
+                &:hover {
+                    span.txt {
+                        width: 60px;
+                    }
+                }
+            }
         }
     }
 }
 
 .main-content {
     margin-top: 45px;
+    .pane {
+        float:left;
+        background-color:yellow;
+        margin-right:10px;
+    }
+    .easel {
+        margin:30px;
+        position:relative;
+    }
     .hide-rect {
         .area {
             border: none;
