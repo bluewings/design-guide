@@ -13,7 +13,23 @@
         ARCHIVE_KEY: 'ls-design-guide-data'
     };
 
-    app = angular.module('design-guide', ['ngSanitize', 'ui.bootstrap']);
+    app = angular.module('design-guide', ['ngSanitize', 'ui.bootstrap', function ($provide) {
+
+        return $provide.decorator('$rootScope', [
+            '$delegate', function ($delegate) {
+            $delegate.safeApply = function (fn) {
+                var phase = $delegate.$$phase;
+                if (phase === "$apply" || phase === "$digest") {
+                    if (fn && typeof fn === 'function') {
+                        fn();
+                    }
+                } else {
+                    $delegate.$apply(fn);
+                }
+            };
+            return $delegate;
+        }]);
+    }]);
 
     app.directive('loading', function () {
 
@@ -145,9 +161,15 @@
         view = {
             uploadForm: $element.find('form'),
             inputFile: $element.find('input:file'),
-            canvas: $element.find('canvas').get(0),
-            ctx: null
+            //canvas: $element.find('canvas').get(0),
+            //ctx: null,
+            magnify: {
+                canvas: $element.find('canvas.magnify').get(0),
+                ctx: null
+            }
         };
+        view.magnify.ctx = view.magnify.canvas.getContext('2d');
+        view.magnify.ctx.strokeStyle = 'red';        
 
         _tmp = {
             orgImgEl: null,
@@ -196,8 +218,6 @@
         // merge boxes
         $element.delegate(CONFIG.SELECTOR_BOX, 'mousedown', function (event) {
 
-
-
             if (_drag.ondrag === false) {
                 _drag.ondrag = true;
                 _drag.frIndex = $(event.currentTarget).attr('data-box-index');
@@ -238,11 +258,35 @@
         // canvas color picker
         $element.delegate('canvas[data-scaled]', 'mousemove', function (event) {
 
-            var imgData = event.target.getContext('2d').getImageData(event.offsetX, event.offsetY, 1, 1).data,
-                rgb = '#' + (imgData[0]).toString(16) + (imgData[1]).toString(16) + (imgData[2]).toString(16);
+            var W = 7, H = 7;
+
+            var imgData = event.target.getContext('2d').getImageData(event.offsetX - ((W - 1) / 2 ), event.offsetY - ((H - 1) / 2 ), W, H).data,
+                eW = parseInt(view.magnify.canvas.width / W, 10),
+                eH = parseInt(view.magnify.canvas.height / H, 10),
+                ynx, xnx, inx, rgb;
+
+            for (ynx = 0; ynx < H; ynx++) {
+                for (xnx = 0; xnx < W; xnx++) {
+                    inx = (ynx * W + xnx) * 4;
+                    rgb =  'rgb(' +imgData[inx] + ',' +imgData[inx + 1] + ',' +imgData[inx + 2] + ')';
+                    view.magnify.ctx.fillStyle = rgb;
+                    view.magnify.ctx.fillRect(xnx * eW, ynx * eH, eW, eH);
+                }                
+            }
+            view.magnify.ctx.rect(eW * ((W - 1) / 2) + 0.5, eH * ((H - 1 ) / 2) + 0.5, eW - 1, eH - 1);
+            view.magnify.ctx.stroke();
 
             $scope.$apply(function () {
-                $scope.data.colorPicked = rgb;
+
+                var r, g, b;
+                imgData = event.target.getContext('2d').getImageData(event.offsetX, event.offsetY, 1, 1).data;
+                r = (imgData[0]).toString(16);
+                g = (imgData[1]).toString(16);
+                b = (imgData[2]).toString(16);
+                r += (r.length < 2 ? '0' : '');
+                g += (g.length < 2 ? '0' : '');
+                b += (b.length < 2 ? '0' : '');
+                $scope.data.colorPicked = '#' + r + g + b;
             });
 
         }).delegate('canvas[data-scaled]', 'mouseout', function (event) {
@@ -253,12 +297,9 @@
 
         }).delegate('canvas[data-scaled]', 'click', function (event) {
 
-            var imgData = event.target.getContext('2d').getImageData(event.offsetX, event.offsetY, 1, 1).data,
-                rgb = '#' + (imgData[0]).toString(16) + (imgData[1]).toString(16) + (imgData[2]).toString(16);
-
-            if ($scope.data.selectedBox) {
+            if ($scope.data.selectedBox && $scope.data.colorPicked) {
                 $scope.$apply(function () {
-                    $scope.data.selectedBox.desc = $.trim($scope.data.selectedBox.desc) + ' ' + rgb;
+                    $scope.data.selectedBox.desc = $.trim($scope.data.selectedBox.desc) + ' ' + $scope.data.colorPicked;
                 });
             }
         });
