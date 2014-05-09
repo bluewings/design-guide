@@ -161,7 +161,7 @@ var designGuideUtil;
             top = (to.top < from.top ? to.top : from.top) - 10;
             left = (to.left < from.left ? to.left : from.left) - 10;
             width = parseInt(Math.abs(from.left - to.left), 10) + 20;
-            height = parseInt(Math.abs(from.top - to.top), 10) + 220;
+            height = parseInt(Math.abs(from.top - to.top), 10) + Math.max(fromEl.outerHeight(), toEl.outerHeight());
 
             lineEl.css({
                 display: 'none',

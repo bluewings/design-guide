@@ -11,6 +11,12 @@ body {
   font-family: Nanum Gothic,AppleGothic,sans-serif;
   font-size: 12px; }
 
+.dropdown-menu {
+  min-width: 0;
+  font-size: 12px; }
+  .dropdown-menu li {
+    text-align: left; }
+
 span.ico {
   background-image: url("/images/ico_guide_type_revert.png");
   display: inline-block;
@@ -62,7 +68,7 @@ span.ico-align {
     border-bottom: 1px solid #ccc; }
     .navbar.navbar-fixed-top .navbar-nav.target-list > li > a {
       padding: 6px 10px 8px;
-      font-size: 18px;
+      font-size: 13px;
       font-weight: bold;
       color: #fff !important; }
     .navbar.navbar-fixed-top .navbar-nav > li > a {

@@ -10,10 +10,28 @@ block content
 						| Design Guide Helper v0.1
 
 
+				ul.nav.navbar-nav.target-list(style='font-family:NanumGothic;')
+					li.dropdown
+						a.dropdown-toggle(href='', style='background-color:{{data._workId ? "#3276b1" : "#4cae4c"}};', data-toggle='dropdown')
+							span(style='padding-left:5px;padding-right:10px')
+								| {{data._workName ? data._workName : 'noname'}}
+							b.caret
+						ul.dropdown-menu
+							li(ng-repeat='recent in data.recentFiles')
+								a(ng-click='func.loadByWorkId(recent.workId)', href='')
+									| {{recent.workName}}
+									span(style='font-family:Tahoma;font-size:11px;margin-left:10px;color:#aaa;')
+										{{recent.time | date : 'yyyy-MM-dd HH:mm:ss'}}
+							li.divider(ng-show='data.recentFiles.length > 0')
+							li(ng-show='data.recentFiles.length > 0')
+								a(ng-click='data.recentFiles = []', href='')
+									| 최근 작업 목록 삭제
+							li
+								a(ng-click='func.createNew()', href='')
+									| 새 작업 시작
 
 
-
-				div.btn-area(style='border-left:1px solid silver;margin-left:5px')
+				div.btn-area(style='border-left:1px solid silver')
 
 					a(ng-click='func.browse()')
 						span.glyphicon.glyphicon-folder-open
@@ -37,14 +55,7 @@ block content
 						span.txt
 							| Clear							
 
-				//- ul.nav.navbar-nav.target-list
-					li.dropdown
-						a.dropdown-toggle(href='', style='background-color:#669acc', data-toggle='dropdown')
-							| {{data.selectedTarget.name}}noname 한글테스트
-							b.caret
-						ul.dropdown-menu
-							li(mg-repeat='target in data.targets')
-								a(ng-click='data.selectedTarget = target', href='') {{target.name}}
+
 
 
 

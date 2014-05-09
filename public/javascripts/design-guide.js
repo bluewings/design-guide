@@ -281,7 +281,8 @@
             box: {},
             history: [],
             historyIndex: 0,
-            panelWidth: 400
+            panelWidth: 400,
+            recentFiles: []
         };
 
         $scope.$watch('data._workId', function (newValue, oldValue) {
@@ -421,6 +422,14 @@
 
         $scope.func = {
 
+            // 신규 작업 시작
+            createNew: function() {
+
+                $scope.func.clear();
+                $scope.data._workId = null;
+                $scope.data._workName = null;
+            },
+
             // 작업내용 초기화
             clear: function () {
 
@@ -443,9 +452,7 @@
 
                         $http.delete('/work/' + $scope.data._workId).success(function () {
 
-                            $scope.func.clear();
-                            $scope.data._workId = null;
-                            $scope.data._workName = null;
+                            $scope.func.createNew();
                         });
                     }
                 }
@@ -569,8 +576,24 @@
                 });
             },
 
+            loadByWorkId: function(workId) {
+
+                $http.get('/work/' + search.workId).success(function (data) {
+
+                    if (data.code == 200) {
+                        $scope.func.load(data.result.content, search.workId, data.result.filename);
+                    }
+                });
+            },
+
             // 저장된 항목 불러오기 (문자열)
             load: function (data, workId, name) {
+
+                $scope.data.recentFiles.unshift({
+                    workId: workId,
+                    workName: name,
+                    time: new Date()
+                });
 
                 try {
                     $scope.func.unselectBox();
@@ -753,12 +776,8 @@
 
         // 최초 인입시 파라미터값 확인 (작업ID 가 있으면 로드)
         if (search && search.workId) {
-            $http.get('/work/' + search.workId).success(function (data) {
 
-                if (data.code == 200) {
-                    $scope.func.load(data.result.content, search.workId, data.result.filename);
-                }
-            });
+            $scope.func.loadByWorkId(search.workId);
         }
         //$scope.func.load();
 
