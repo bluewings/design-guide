@@ -108,10 +108,12 @@ block content
 							div(style='background-color:#fff;margin:-10px;padding:10px 10px 0')
 								label
 									input(type='checkbox', ng-model='data.hideRect')
-									| 분할 영역 표시
+									| 분할 영역 숨김
 
 							div(style='position:relative', class='{{data.hideRect ? "hide-rect" : ""}}')
-								div.easel(style='margin-top:50px')
+								div.easel(style='margin-top:50px;position:relative')
+									ruler(type='horizontal',limit='data.imgWidth')
+									ruler(type='vertical',limit='data.imgHeight')
 									img(ng-src="{{data.srcImg}}")
 									div(ng-bind-html="data.box | layerBox")
 					

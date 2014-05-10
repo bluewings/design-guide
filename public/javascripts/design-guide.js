@@ -39,6 +39,36 @@
             scope: false,
             template: '<ul class="bokeh"><li></li><li></li><li></li><li></li><li></li></ul>'
         };
+    }).directive('ruler', function () {
+
+        return {
+            restrict: 'E',
+            replace: true,
+            scope: false,
+            template: '<div class="ruler"></div>',
+            controller: function($scope, $element) {
+
+                var type = $element.attr('type'),
+                    limit = parseInt($element.attr('limit'), 10) / 100, html = [], inx;
+
+                if (!limit || isNaN(limit)) {
+                    limit = 50;
+                }
+                if (type == 'horizontal') {
+                    $element.addClass('ruler-h');
+                } else {
+                    $element.addClass('ruler-v');
+                }
+                for (inx = 0; inx < limit; inx++) {
+                    if (type == 'horizontal') {
+                        html.push('<div style="left:' + (inx * 100 + 3) + 'px;top:1px">' + (inx * 100) + '</div>');    
+                    } else {
+                        html.push('<div style="top:' + (inx * 100 + 1) + 'px;left:3px">' + (inx * 100) + '</div>');    
+                    }
+                }
+                $element.append(html.join(''));
+            }
+        };
     });
 
     app.filter('layerBox', function ($filter, $sce) {
@@ -758,6 +788,8 @@
                     _tmp.ctx.drawImage(img, 0, 0);
 
                     imgEl = _tmp.edgeImgEl;
+                    $scope.data.imgWidth = imgEl.width;
+                    $scope.data.imgHeight = imgEl.height;
 
                     if (!$scope.data.box || !$scope.data.box.boxes || $scope.data.box.boxes.length === 0) {
                         $scope.$root.safeApply(function () {
